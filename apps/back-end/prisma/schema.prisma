@@ -7,81 +7,95 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  ADMIN
+  USER
+  VIEWER
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum DocumentType {
+  ACCOUNT_OPENING
+  PRESENTATION_LETTER
+  TRANSPORT_VOUCHER
+  SUBSTITUTION_FORM
+  CLOSING_COMMUNICATION
+  EARLY_TERMINATION_COMMUNICATION
+  RENEWAL_COMMUNICATION
+  PAYSLIP
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSED
+  ERROR
+}
+
 model User {
-  id                  Int       @id @default(autoincrement())
-  email               String    @unique
-  password            String
-  name                String?
-  role                String    @default("VIEWER")
-  bio                 String?
-  avatarId            Int?
-  avatar              Upload?   @relation(fields: [avatarId], references: [id])
-  resetToken          String?
-  resetTokenExpires   DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  forcePasswordChange Boolean   @default(false)
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  name      String?
+  role      UserRole   @default(VIEWER)
+  status    UserStatus @default(PENDING)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@map("users")
 }
 
-model Project {
-  id              Int       @id @default(autoincrement())
-  title           String
-  description     String?
-  fullDescription String
-  category        String?
-  imageId         Int?
-  image           Upload?   @relation(fields: [imageId], references: [id])
-  date            String?
-  status          String    @default("PUBLISHED")
-  publishedAt     DateTime?
-  seoTitle        String?
-  seoDescription  String?
-  views           Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+model Employee {
+  id           Int            @id @default(autoincrement())
+  name         String
+  cpf          String         @unique
+  registration String?        @unique
+  status       EmployeeStatus @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
-  @@map("projects")
+  contracts Contract[]
+  documents Document[]
+
+  @@map("employees")
 }
 
-model TeamMember {
-  id        Int      @id @default(autoincrement())
-  name      String
-  role      String
-  email     String?
-  imageId   Int?
-  image     Upload?  @relation(fields: [imageId], references: [id])
-  status    String   @default("Ativo")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Contract {
+  id         Int       @id @default(autoincrement())
+  employeeId Int
+  employee   Employee  @relation(fields: [employeeId], references: [id])
+  type       String
+  startDate  DateTime
+  endDate    DateTime?
+  status     String    @default("ACTIVE")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  @@map("team_members")
-}
-
-model HistoryEvent {
-  id        Int      @id @default(autoincrement())
-  year      String
-  event     String
-  type      String
-  imageId   Int?
-  image     Upload?  @relation(fields: [imageId], references: [id])
-  date      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("history_events")
+  @@map("contracts")
 }
 
 model Document {
-  id        Int      @id @default(autoincrement())
-  name      String
-  category  String   @default("Outros")
-  uploadId  Int?     @unique
-  upload    Upload?  @relation(fields: [uploadId], references: [id])
-  isPublic  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int            @id @default(autoincrement())
+  name       String
+  type       DocumentType   @default(OTHER)
+  status     DocumentStatus @default(PENDING)
+  employeeId Int?
+  employee   Employee?      @relation(fields: [employeeId], references: [id])
+  uploadId   Int            @unique
+  upload     Upload         @relation(fields: [uploadId], references: [id])
+  ocrData    Json?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   @@map("documents")
 }
@@ -95,12 +109,7 @@ model Upload {
   url          String
   createdAt    DateTime @default(now())
 
-  // Relations
-  projects      Project[]
-  teamMembers   TeamMember[]
-  historyEvents HistoryEvent[]
-  document      Document?
-  users         User[]
+  document Document?
 
   @@map("uploads")
 }
@@ -115,13 +124,4 @@ model AuditLog {
   createdAt  DateTime @default(now())
 
   @@map("audit_logs")
-}
-
-model Setting {
-  id        Int      @id @default(autoincrement())
-  key       String   @unique
-  value     String
-  updatedAt DateTime @updatedAt
-
-  @@map("settings")
 }
