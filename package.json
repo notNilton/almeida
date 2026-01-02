@@ -1,0 +1,18 @@
+{
+    "name": "almeida-monorepo",
+    "private": true,
+    "scripts": {
+        "dev": "pnpm -r dev",
+        "dev:back-end": "pnpm -F back-end dev",
+        "dev:back-office": "pnpm -F back-office dev",
+        "dev:front-end": "pnpm -F front-end dev",
+        "build": "pnpm -r build",
+        "lint": "pnpm -r lint",
+        "prisma": "pnpm -F back-end prisma",
+        "db:migrate": "pnpm -F back-end prisma migrate dev",
+        "db:studio": "pnpm -F back-end prisma studio"
+    },
+    "devDependencies": {
+        "turbo": "latest"
+    }
+}

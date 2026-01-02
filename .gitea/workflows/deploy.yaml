@@ -1,0 +1,48 @@
+name: Build and Deploy
+on: [push]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Gitea Registry
+        uses: docker/login-action@v2
+        with:
+          registry: gitea.nilbyte.com.br
+          username: ${{ gitea.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apps/back-end
+          push: true
+          tags: gitea.nilbyte.com.br/${{ gitea.repository }}/backend:latest
+
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apps/front-end
+          push: true
+          tags: gitea.nilbyte.com.br/${{ gitea.repository }}/frontend:latest
+
+      - name: Build and Push Backoffice
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apps/back-office
+          push: true
+          tags: gitea.nilbyte.com.br/${{ gitea.repository }}/backoffice:latest
+
+      - name: Deploy to Homelab
+        run: |
+          # Export GITEA_REPOSITORY variable for docker-compose
+          export GITEA_REPOSITORY=${{ gitea.repository }}
+
+          # Pull latest images
+          docker compose pull
+
+          # Deploy services
+          docker compose up -d
