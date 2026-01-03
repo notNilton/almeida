@@ -1,25 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { randomBytes } from 'crypto';
-import { extname } from 'path';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import type { StorageProvider } from './providers/storage.provider';
 
 @Injectable()
 export class UploadsService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        @Inject('STORAGE_PROVIDER') private readonly storageProvider: StorageProvider,
+    ) { }
 
-    generateFileName(originalName: string): string {
-        const hash = randomBytes(16).toString('hex');
-        const extension = extname(originalName);
-        return `${hash}${extension}`;
-    }
-
-    getFileUrl(fileName: string, req: any): string {
-        const baseUrl = process.env.API_URL || `${req.protocol}://${req.get('host')}`;
-        return `${baseUrl}/public/${fileName}`;
-    }
-
-    async saveUploadMetadata(filename: string, originalName: string, mimetype: string, size: number, req: any) {
-        const url = this.getFileUrl(filename, req);
+    async saveUploadMetadata(filename: string, originalName: string, mimetype: string, size: number) {
+        const url = this.storageProvider.getUrl(filename);
         return this.prisma.upload.create({
             data: {
                 filename,
@@ -29,5 +20,18 @@ export class UploadsService {
                 url,
             },
         });
+    }
+
+    async findById(id: number) {
+        return this.prisma.upload.findUnique({ where: { id } });
+    }
+
+    async delete(id: number) {
+        const upload = await this.findById(id);
+        if (upload) {
+            await this.storageProvider.delete(upload.filename);
+            await this.prisma.upload.delete({ where: { id } });
+        }
+        return upload;
     }
 }

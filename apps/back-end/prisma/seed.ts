@@ -13,42 +13,23 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+import { UserRole, UserStatus } from '@prisma/client';
+
 async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
 
   // Create admin user
   await prisma.user.upsert({
-    where: { email: 'admin@icctes.org' },
+    where: { email: 'admin@almeida.com.br' },
     update: {},
     create: {
-      email: 'admin@icctes.org',
+      email: 'admin@almeida.com.br',
       password: hashedPassword,
-      name: 'Admin ICCTES',
+      name: 'Admin Almeida',
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
     },
   });
-
-  // Seed projects
-  const projects = [
-    {
-      title: 'Natal Jerusalém',
-      description: 'Projeto de Natal na Praça Jerusalém.',
-      fullDescription: 'Descrição completa do projeto de natal...',
-      category: 'Social',
-      date: '2024-12-25',
-    },
-    {
-      title: 'Atelier Social',
-      description: 'Capacitação profissional em artes.',
-      fullDescription: 'O Atelier Social foca em transformar vidas...',
-      category: 'Educação',
-      date: '2024-11-10',
-    },
-  ];
-
-  for (const projectData of projects) {
-    const { ...data } = projectData;
-    await prisma.project.create({ data });
-  }
 
   console.log('Seed completed successfully!');
 }

@@ -2,15 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { ProjectsModule } from './projects/projects.module';
-import { TeamModule } from './team/team.module';
-import { HistoryModule } from './history/history.module';
 import { DocumentsModule } from './documents/documents.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AuditLogModule } from './audit/audit-log.module';
 import { UsersModule } from './users/users.module';
-import { SettingsModule } from './settings/settings.module';
+import { EmployeesModule } from './employees/employees.module';
+import { ContractsModule } from './contracts/contracts.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -24,9 +22,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     AuthModule,
     AuditLogModule,
     UsersModule,
-    ProjectsModule,
-    TeamModule,
-    HistoryModule,
+    EmployeesModule,
+    ContractsModule,
     DocumentsModule,
     PrismaModule,
     UploadsModule,

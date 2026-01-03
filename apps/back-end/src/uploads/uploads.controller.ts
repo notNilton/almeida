@@ -38,23 +38,18 @@ export class UploadsController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB
+                    new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
                 ],
             }),
         )
         file: Express.Multer.File,
         @Req() req: any,
     ) {
-        if (!file.mimetype.startsWith('image/')) {
-            throw new BadRequestException('Tipo de arquivo inválido. Somente imagens são permitidas.');
-        }
-
         return this.uploadsService.saveUploadMetadata(
             file.filename,
             file.originalname,
             file.mimetype,
             file.size,
-            req,
         );
     }
 }

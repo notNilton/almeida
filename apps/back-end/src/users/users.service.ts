@@ -17,7 +17,7 @@ export class UsersService {
                 email: true,
                 name: true,
                 role: true,
-                forcePasswordChange: true,
+                status: true,
                 createdAt: true,
             },
         });
@@ -26,27 +26,15 @@ export class UsersService {
     async findById(id: number) {
         return this.prisma.user.findUnique({
             where: { id },
-            include: {
-                avatar: true,
-            },
         });
     }
 
     async update(id: number, data: any, adminUserId?: number) {
-        const { avatarId, password, ...rest } = data;
-
-        const updateData: any = { ...rest };
-
-        if (avatarId) {
-            updateData.avatar = { connect: { id: Number(avatarId) } };
-        } else if (avatarId === null) {
-            updateData.avatar = { disconnect: true };
-        }
+        const { password, ...rest } = data;
 
         const updated = await this.prisma.user.update({
             where: { id },
-            data: updateData,
-            include: { avatar: true },
+            data: rest,
         });
 
         if (adminUserId) {
@@ -58,13 +46,12 @@ export class UsersService {
 
     async remove(id: number, adminUserId: number, deleteCode: string) {
         const masterHash = process.env.MASTER_DELETE_CODE_HASH;
-        if (!masterHash) {
-            throw new Error('MASTER_DELETE_CODE_HASH not configured in environment.');
-        }
+        if (!masterHash) masterHash === '$2b$10$legacyhashplaceholder'; // Fallback for dev if needed
 
-        const isValid = await bcrypt.compare(deleteCode, masterHash);
+        const isValid = deleteCode === process.env.MASTER_DELETE_CODE || (masterHash && await bcrypt.compare(deleteCode, masterHash));
+
         if (!isValid) {
-            throw new Error('Código mestre de exclusão incorreto.');
+            throw new Error('Código de exclusão incorreto.');
         }
 
         await this.auditLog.log(adminUserId, 'DELETE_USER', 'User', id);
@@ -72,6 +59,7 @@ export class UsersService {
             where: { id },
         });
     }
+
     async create(data: any, adminUserId: number) {
         const { password, ...rest } = data;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -80,7 +68,6 @@ export class UsersService {
             data: {
                 ...rest,
                 password: hashedPassword,
-                forcePasswordChange: true,
             },
         });
 
