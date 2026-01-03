@@ -1,13 +1,8 @@
-import type { Upload } from "../../../types/upload";
-
 export interface User {
     id: number;
     email: string;
     name?: string;
-    role: 'ADMIN' | 'EDITOR' | 'VIEWER';
-    bio?: string;
-    avatarId?: number;
-    avatar?: Upload;
-    forcePasswordChange?: boolean;
+    role: 'ADMIN' | 'USER' | 'VIEWER';
+    status: 'PENDING' | 'ACTIVE' | 'INACTIVE';
     createdAt: string;
 }

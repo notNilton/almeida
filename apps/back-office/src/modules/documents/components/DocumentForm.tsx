@@ -13,12 +13,12 @@ interface DocumentFormProps {
 }
 
 export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading }: DocumentFormProps) {
-    const [formData, setFormData] = useState<Omit<Document, 'id'>>({
+    const [formData, setFormData] = useState<Omit<Document, 'id' | 'status' | 'ocrData' | 'createdAt' | 'updatedAt'>>({
         name: '',
-        category: 'Outros',
+        type: 'OTHER',
         uploadId: undefined,
         upload: undefined,
-        isPublic: true,
+        employeeId: undefined,
     });
     const [isDragging, setIsDragging] = useState(false);
 
@@ -26,18 +26,18 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
         if (initialData) {
             setFormData({
                 name: initialData.name,
-                category: initialData.category || 'Outros',
+                type: initialData.type || 'OTHER',
                 uploadId: initialData.uploadId,
                 upload: initialData.upload,
-                isPublic: initialData.isPublic,
+                employeeId: initialData.employeeId,
             });
         } else {
             setFormData({
                 name: '',
-                category: 'Outros',
+                type: 'OTHER',
                 uploadId: undefined,
                 upload: undefined,
-                isPublic: true,
+                employeeId: undefined,
             });
         }
     }, [initialData, isOpen]);
@@ -117,7 +117,7 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
             alert('Por favor, faça o upload de um arquivo primeiro.');
             return;
         }
-        await onSubmit(payload as Omit<Document, 'id'>);
+        await onSubmit(payload as any);
         onClose();
     };
 
@@ -188,34 +188,34 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-muted-foreground">Categoria</label>
+                                    <label className="text-sm font-medium text-muted-foreground">ID do Funcionário (Opcional)</label>
+                                    <input
+                                        type="number"
+                                        value={formData.employeeId || ''}
+                                        onChange={(e) => setFormData({ ...formData, employeeId: e.target.value ? parseInt(e.target.value) : undefined })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                        placeholder="Ex: 5"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-muted-foreground">Tipo de Documento</label>
                                     <select
-                                        value={formData.category}
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        value={formData.type}
+                                        onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
                                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     >
-                                        <option value="Atas">Atas</option>
-                                        <option value="Editais">Editais</option>
-                                        <option value="Relatórios Anuais">Relatórios Anuais</option>
-                                        <option value="Balanços">Balanços</option>
-                                        <option value="Outros">Outros</option>
+                                        <option value="PAYSLIP">Folha de Pagamento</option>
+                                        <option value="ACCOUNT_OPENING">Abertura de Conta</option>
+                                        <option value="TRANSPORT_VOUCHER">Vale Transporte</option>
+                                        <option value="PRESENTATION_LETTER">Carta de Apresentação</option>
+                                        <option value="SUBSTITUTION_FORM">Formulário de Substituição</option>
+                                        <option value="CLOSING_COMMUNICATION">Comunicação de Fechamento</option>
+                                        <option value="OTHER">Outros</option>
                                     </select>
                                 </div>
                             </>
                         )}
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-2">
-                        <input
-                            type="checkbox"
-                            id="isPublic"
-                            checked={formData.isPublic}
-                            onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                            className="rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
-                        />
-                        <label htmlFor="isPublic" className="text-sm font-medium text-muted-foreground">
-                            Documento Público
-                        </label>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4">

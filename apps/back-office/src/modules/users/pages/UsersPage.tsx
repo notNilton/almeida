@@ -132,7 +132,7 @@ export function UsersPage() {
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none"
                                     >
                                         <option value="VIEWER" className="bg-[#020617]">VIEWER (Apenas visualização)</option>
-                                        <option value="EDITOR" className="bg-[#020617]">EDITOR (Pode editar conteúdo)</option>
+                                        <option value="USER" className="bg-[#020617]">USER (Usuário operacional)</option>
                                         <option value="ADMIN" className="bg-[#020617]">ADMIN (Controle total)</option>
                                     </select>
                                 </div>
@@ -242,13 +242,17 @@ export function UsersPage() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    {user.forcePasswordChange ? (
-                                        <span className="px-2 py-1 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                                            Troca de senha pendente
-                                        </span>
-                                    ) : (
+                                    {user.status === 'ACTIVE' ? (
                                         <span className="px-2 py-1 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                                             Ativo
+                                        </span>
+                                    ) : user.status === 'PENDING' ? (
+                                        <span className="px-2 py-1 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                                            Pendente
+                                        </span>
+                                    ) : (
+                                        <span className="px-2 py-1 rounded text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20">
+                                            Inativo
                                         </span>
                                     )}
                                 </td>

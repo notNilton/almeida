@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../../lib/api';
 import { LogIn, Lock, Mail } from 'lucide-react';
@@ -12,9 +12,6 @@ export function LoginPage() {
 
     const { login } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const from = location.state?.from?.pathname || '/';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,7 +21,7 @@ export function LoginPage() {
         try {
             const response = await api.post('/auth/login', { email, password });
             login(response.data.access_token, response.data.user);
-            navigate(from, { replace: true });
+            navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
         } finally {

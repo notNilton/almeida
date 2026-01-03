@@ -29,7 +29,7 @@ export function useUpdateDocument() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...data }: Partial<Document> & { id: number }) => {
-      const response = await api.patch(`/documents/${id}`, data);
+      const response = await api.put(`/documents/${id}`, data);
       return response.data;
     },
     onSuccess: () => {

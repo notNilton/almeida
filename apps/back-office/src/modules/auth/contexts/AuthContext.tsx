@@ -5,10 +5,7 @@ interface User {
     email: string;
     name: string;
     role: string;
-    avatar?: {
-        url: string;
-    };
-    forcePasswordChange?: boolean;
+    status: string;
 }
 
 interface AuthContextType {
