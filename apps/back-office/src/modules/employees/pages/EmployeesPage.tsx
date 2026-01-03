@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { UserPlus, User as UserIcon, Calendar, MoreHorizontal, Check, X, Loader2, Trash2, FileSignature, Search } from "lucide-react";
+import { UserPlus, User as UserIcon, Calendar, Check, X, Loader2, Trash2, Search, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useEmployees, useCreateEmployee, useDeleteEmployee } from "../hooks/useEmployees";
 import { useHeader } from "../../../components/layout/HeaderContext";
 import type { Employee } from "../types/employee";
@@ -198,17 +199,19 @@ export function EmployeesPage() {
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex items-center justify-end gap-2">
-                                        <button className="p-2 opacity-0 group-hover:opacity-100 hover:bg-white/10 rounded-lg transition-all text-muted-foreground hover:text-white" title="Contratos">
-                                            <FileSignature className="w-4 h-4" />
-                                        </button>
+                                        <Link
+                                            to={`/funcionarios/${emp.id}`}
+                                            className="p-2 opacity-0 group-hover:opacity-100 hover:bg-white/10 rounded-lg transition-all text-muted-foreground hover:text-white"
+                                            title="Visualizar Detalhes"
+                                        >
+                                            <Eye className="w-4 h-4" />
+                                        </Link>
                                         <button
                                             onClick={() => setEmployeeToDelete(emp)}
                                             className="p-2 opacity-0 group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-500 rounded-lg transition-all text-muted-foreground"
+                                            title="Excluir"
                                         >
                                             <Trash2 className="w-4 h-4" />
-                                        </button>
-                                        <button className="p-2 opacity-0 group-hover:opacity-100 hover:bg-white/10 rounded-lg transition-all text-muted-foreground hover:text-white">
-                                            <MoreHorizontal className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </td>

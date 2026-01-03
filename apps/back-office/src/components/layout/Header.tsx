@@ -29,7 +29,14 @@ export function Header() {
                         <ArrowLeft className="w-5 h-5 text-muted-foreground" />
                     </button>
                 )}
-                <Breadcrumbs />
+                <div className="flex flex-col">
+                    <Breadcrumbs />
+                    {header.subtitle && (
+                        <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest leading-none mt-1">
+                            {header.subtitle}
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div className="flex items-center gap-4">

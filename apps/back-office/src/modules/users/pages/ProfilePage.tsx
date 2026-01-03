@@ -10,7 +10,7 @@ export function ProfilePage() {
     const [formData, setFormData] = useState({
         name: "",
         bio: "",
-        avatarId: undefined as number | undefined,
+        avatarId: undefined as number | undefined | null,
         avatarUrl: "",
     });
 

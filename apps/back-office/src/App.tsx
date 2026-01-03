@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { Toaster } from "sonner";
 import { UsersPage } from "./modules/users/pages/UsersPage";
 import { EmployeesPage } from "./modules/employees/pages/EmployeesPage";
+import { EmployeeDetailsPage } from "./modules/employees/pages/EmployeeDetailsPage";
 import { ContractsPage } from "./modules/employees/pages/ContractsPage";
 
 function AppContent() {
@@ -31,6 +32,7 @@ function AppContent() {
                   <Routes>
                     <Route path="/" element={<DashboardHome />} />
                     <Route path="/funcionarios" element={<EmployeesPage />} />
+                    <Route path="/funcionarios/:id" element={<EmployeeDetailsPage />} />
                     <Route path="/contratos" element={<ContractsPage />} />
                     <Route path="/documentos" element={<DocumentsPage />} />
                     <Route path="/perfil" element={<ProfilePage />} />

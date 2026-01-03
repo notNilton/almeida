@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 
 interface HeaderStore {
     title: string;
+    subtitle?: string;
     actions?: ReactNode;
     backPath?: string;
     onBack?: () => void;
