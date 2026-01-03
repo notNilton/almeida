@@ -12,11 +12,11 @@ import { useAuth } from "../../modules/auth/contexts/AuthContext";
 
 const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Funcionários", href: "/employees", icon: Users, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Contratos", href: "/contracts", icon: FileSignature, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Documentos", href: "/documents", icon: FileText, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Perfil", href: "/profile", icon: User, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Gestão de Usuários", href: "/users", icon: UserCircle, roles: ['ADMIN'] },
+    { name: "Funcionários", href: "/funcionarios", icon: Users, roles: ['ADMIN', 'USER', 'VIEWER'] },
+    { name: "Contratos", href: "/contratos", icon: FileSignature, roles: ['ADMIN', 'USER', 'VIEWER'] },
+    { name: "Documentos", href: "/documentos", icon: FileText, roles: ['ADMIN', 'USER', 'VIEWER'] },
+    { name: "Perfil", href: "/perfil", icon: User, roles: ['ADMIN', 'USER', 'VIEWER'] },
+    { name: "Gestão de Usuários", href: "/usuarios", icon: UserCircle, roles: ['ADMIN'] },
 ];
 
 import { Link, useLocation } from "react-router-dom";

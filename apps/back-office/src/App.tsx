@@ -30,11 +30,11 @@ function AppContent() {
                 <DashboardLayout>
                   <Routes>
                     <Route path="/" element={<DashboardHome />} />
-                    <Route path="/employees" element={<EmployeesPage />} />
-                    <Route path="/contracts" element={<ContractsPage />} />
-                    <Route path="/documents" element={<DocumentsPage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/funcionarios" element={<EmployeesPage />} />
+                    <Route path="/contratos" element={<ContractsPage />} />
+                    <Route path="/documentos" element={<DocumentsPage />} />
+                    <Route path="/perfil" element={<ProfilePage />} />
+                    <Route path="/usuarios" element={<UsersPage />} />
                   </Routes>
                 </DashboardLayout>
               </AuthGuard>
