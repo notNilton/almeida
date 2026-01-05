@@ -28,15 +28,16 @@ jobs:
           context: .
           file: apps/back-end/Dockerfile
           push: true
-          tags: gitea.nilbyte.com.br/nilbyte/almeida-backend:latest
+          tags: gitea.nilbyte.com.br/${{ gitea.repository }}/backend:latest
 
-      - name: Build and Push Backoffice
-      # Build Frontend
-      - name: Build and push Frontend image
+      # Build Backoffice
+      - name: Build and push Backoffice image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: apps/back-office/Dockerfile
+          build-args: |
+            VITE_API_URL=https://api.almeida.nilbyte.com.br
           push: true
           tags: gitea.nilbyte.com.br/${{ gitea.repository }}/backoffice:latest
 
@@ -50,7 +51,3 @@ jobs:
 
           # Restart containers with the new images
           docker compose up -d
-          build-args: |
-            VITE_API_URL=https://api.almeida.nilbyte.com.br
-          push: true
-          tags: gitea.nilbyte.com.br/nilbyte/almeida-frontend:latest
