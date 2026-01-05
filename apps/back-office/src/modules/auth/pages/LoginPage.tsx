@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../../lib/api';
-import { LogIn, Lock, Mail } from 'lucide-react';
+import { LogIn, Lock, Mail, Loader2 } from 'lucide-react';
 
 export function LoginPage() {
     const [email, setEmail] = useState('');
@@ -42,17 +42,18 @@ export function LoginPage() {
 
                 <form onSubmit={handleSubmit} className="glass p-8 rounded-2xl border border-white/10 space-y-6">
                     {error && (
-                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
+                        <div role="alert" className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
                             {error}
                         </div>
                     )}
 
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-muted-foreground ml-1">E-mail</label>
+                            <label htmlFor="email" className="text-sm font-medium text-muted-foreground ml-1">E-mail</label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Mail aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <input
+                                    id="email"
                                     type="email"
                                     required
                                     value={email}
@@ -64,10 +65,11 @@ export function LoginPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-muted-foreground ml-1">Senha</label>
+                            <label htmlFor="password" className="text-sm font-medium text-muted-foreground ml-1">Senha</label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Lock aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <input
+                                    id="password"
                                     type="password"
                                     required
                                     value={password}
@@ -82,9 +84,17 @@ export function LoginPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-primary text-black font-bold py-2 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-busy={isLoading}
+                        className="w-full bg-primary text-black font-bold py-2 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                        {isLoading ? 'Entrando...' : 'Entrar'}
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Entrando...
+                            </>
+                        ) : (
+                            'Entrar'
+                        )}
                     </button>
                 </form>
             </div>
