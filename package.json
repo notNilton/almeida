@@ -11,7 +11,10 @@
         "prisma": "pnpm -F back-end prisma",
         "prisma:generate": "pnpm -F back-end prisma generate",
         "prisma:migrate": "pnpm -F back-end prisma migrate dev",
-        "prisma:studio": "pnpm -F back-end prisma studio"
+        "prisma:studio": "pnpm -F back-end prisma studio",
+        "prisma:deploy": "pnpm -F back-end prisma migrate deploy",
+        "prisma:reset": "pnpm -F back-end prisma migrate reset",
+        "prisma:seed": "pnpm -F back-end prisma db seed"
     },
     "devDependencies": {
         "turbo": "latest"

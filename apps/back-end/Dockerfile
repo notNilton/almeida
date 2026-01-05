@@ -9,6 +9,7 @@ COPY . .
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 # Buildar
+RUN pnpm prisma:generate
 RUN pnpm build
 
 # --- Stage Final ---
