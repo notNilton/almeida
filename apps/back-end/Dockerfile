@@ -2,14 +2,18 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# MUDANÇA 1: Copiar TUDO antes do install para o pnpm ver os workspaces (apps/)
+# Copiar tudo (Monorepo precisa disso)
 COPY . .
 
-# Instalar dependências (agora ele vê o apps/back-end/package.json e instala o Nest CLI)
+# Instalar dependências
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
-# Buildar
-RUN pnpm prisma:generate
+# --- A CORREÇÃO ESTÁ AQUI ---
+# Passamos a variável APENAS para este comando. 
+# O Prisma vai achar que existe um banco, vai gerar os tipos e ficar feliz.
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm prisma:generate
+
+# Buildar o projeto
 RUN pnpm build
 
 # --- Stage Final ---
@@ -17,9 +21,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# MUDANÇA 2: Em monorepo, o dist geralmente fica dentro da pasta do app
-# Ajustei para pegar de /app/apps/back-end/dist
+# Copiar os arquivos gerados do builder
 COPY --from=builder /app/apps/back-end/dist ./dist
+# O node_modules agora contém o Prisma Client gerado no passo anterior
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/back-end/package.json ./
 
