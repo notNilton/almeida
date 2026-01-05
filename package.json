@@ -9,8 +9,9 @@
         "build": "pnpm -r build",
         "lint": "pnpm -r lint",
         "prisma": "pnpm -F back-end prisma",
-        "db:migrate": "pnpm -F back-end prisma migrate dev",
-        "db:studio": "pnpm -F back-end prisma studio"
+        "prisma:generate": "pnpm -F back-end prisma generate",
+        "prisma:migrate": "pnpm -F back-end prisma migrate dev",
+        "prisma:studio": "pnpm -F back-end prisma studio"
     },
     "devDependencies": {
         "turbo": "latest"
