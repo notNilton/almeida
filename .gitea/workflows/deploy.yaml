@@ -1,29 +1,38 @@
-name: Build and Deploy
-on: [push]
+name: Build and Push Almeida Monorepo
+run-name: Build default - ${{ gitea.actor }}
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Check out repository code
         uses: actions/checkout@v3
 
       - name: Login to Gitea Registry
         uses: docker/login-action@v2
         with:
           registry: gitea.nilbyte.com.br
-          username: ${{ gitea.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Build and Push Backend
+      # Build Backend
+      - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: apps/back-end/Dockerfile
           push: true
-          tags: gitea.nilbyte.com.br/${{ gitea.repository }}/backend:latest
+          tags: gitea.nilbyte.com.br/nilbyte/almeida-backend:latest
 
       - name: Build and Push Backoffice
+      # Build Frontend
+      - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -41,3 +50,7 @@ jobs:
 
           # Restart containers with the new images
           docker compose up -d
+          build-args: |
+            VITE_API_URL=https://api.almeida.nilbyte.com.br
+          push: true
+          tags: gitea.nilbyte.com.br/nilbyte/almeida-frontend:latest
