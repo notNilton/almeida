@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Git
+.git
+.gitignore
+
+# Testing
+coverage
+test
+spec
+
+# Build artifacts
+dist
+build
+.next
+.nuxt
+
+# Environment variables
+.env
+.env.*
+! .env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
