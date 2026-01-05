@@ -232,6 +232,9 @@ export function UsersPage() {
                                         <div>
                                             <div className="font-bold text-sm">{user.name || "Sem nome"}</div>
                                             <div className="text-xs text-muted-foreground">{user.email}</div>
+                                            <div className="text-[10px] text-muted-foreground/50 font-mono mt-1 select-all hover:text-white transition-colors cursor-copy" title="Clique para copiar o ID">
+                                                ID: {user.id}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>

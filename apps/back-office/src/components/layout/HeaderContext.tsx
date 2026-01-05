@@ -6,6 +6,12 @@ interface HeaderStore {
     actions?: ReactNode;
     backPath?: string;
     onBack?: () => void;
+    search?: {
+        value: string;
+        onChange: (value: string) => void;
+        placeholder?: string;
+    } | null;
+    tabs?: ReactNode;
 }
 
 interface HeaderContextType {

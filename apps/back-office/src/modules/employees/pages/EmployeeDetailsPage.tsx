@@ -10,9 +10,11 @@ import {
     Plus,
     Trash2,
     ExternalLink,
-    Pencil
+    Pencil,
+    Check,
+    X
 } from "lucide-react";
-import { useEmployee } from "../hooks/useEmployees";
+import { useEmployee, useUpdateEmployee } from "../hooks/useEmployees";
 import { useContracts, useDeleteContract } from "../hooks/useContracts";
 import { useDocuments, useDeleteDocument } from "../../documents/hooks/useDocuments";
 import { useHeader } from "../../../components/layout/HeaderContext";
@@ -40,28 +42,80 @@ export function EmployeeDetailsPage() {
     const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
     const [editingContract, setEditingContract] = useState<any>(null);
 
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const updateEmployee = useEmployee(employeeId).refetch; // Re-fetch after update if needed, but react-query handles cache.
+    const updateEmployeeMutation = useUpdateEmployee();
+
+    // Form state
+    const [editForm, setEditForm] = useState({
+        name: "",
+        cpf: "",
+        registration: "",
+        status: "ACTIVE" as "ACTIVE" | "INACTIVE"
+    });
+
     useEffect(() => {
         if (employee) {
+            setEditForm({
+                name: employee.name,
+                cpf: employee.cpf,
+                registration: employee.registration || "",
+                status: employee.status
+            });
+
             setHeader({
                 title: employee.name,
                 subtitle: `CPF: ${employee.cpf}`,
+                tabs: (
+                    <div className="flex gap-1 p-1 bg-white/5 border border-white/10 rounded-xl">
+                        {(['resumo', 'contratos', 'documentos'] as Tab[]).map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={cn(
+                                    "px-4 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider",
+                                    activeTab === tab
+                                        ? "bg-primary text-black shadow-lg shadow-primary/20"
+                                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                )}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+                ),
                 actions: (
-                    <Link
-                        to="/funcionarios"
+                    <button
+                        onClick={() => setIsEditModalOpen(true)}
                         className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl font-bold transition-all text-sm border border-white/10"
                     >
-                        <ArrowLeft className="w-4 h-4" />
-                        Voltar
-                    </Link>
+                        <Pencil className="w-4 h-4" />
+                        Editar
+                    </button>
                 ),
             });
         }
         return () => resetHeader();
-    }, [employee, setHeader, resetHeader]);
+    }, [employee, setHeader, resetHeader, activeTab]);
+
+    const handleUpdateEmployee = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await updateEmployeeMutation.mutateAsync({
+                id: employeeId,
+                ...editForm
+            });
+            setIsEditModalOpen(false);
+            toast.success("Funcionário atualizado com sucesso!");
+        } catch (error) {
+            toast.error("Erro ao atualizar funcionário.");
+        }
+    };
 
     const employeeDocuments = documents?.filter(doc => doc.employeeId === employeeId);
 
     const handleDeleteContract = async (cid: string) => {
+        // ... (existing code)
         if (confirm("Deseja realmente excluir este contrato?")) {
             await deleteContract.mutateAsync(cid);
             toast.success("Contrato excluído com sucesso!");
@@ -69,6 +123,7 @@ export function EmployeeDetailsPage() {
     };
 
     const handleDeleteDocument = async (did: string) => {
+        // ... (existing code)
         if (confirm("Deseja realmente excluir este documento?")) {
             await deleteDocument.mutateAsync(did);
             toast.success("Documento excluído com sucesso!");
@@ -89,24 +144,6 @@ export function EmployeeDetailsPage() {
 
     return (
         <div className="space-y-6 pb-20">
-            {/* Abas */}
-            <div className="flex gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl w-fit">
-                {(['resumo', 'contratos', 'documentos'] as Tab[]).map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                            "px-6 py-2.5 rounded-xl text-sm font-bold transition-all uppercase tracking-wider",
-                            activeTab === tab
-                                ? "bg-primary text-black shadow-lg shadow-primary/20"
-                                : "text-muted-foreground hover:text-white hover:bg-white/5"
-                        )}
-                    >
-                        {tab}
-                    </button>
-                ))}
-            </div>
-
             {/* Conteúdo */}
             <div className="grid grid-cols-1 gap-6">
                 {activeTab === 'resumo' && (
@@ -384,8 +421,6 @@ export function EmployeeDetailsPage() {
                 isOpen={isDocumentModalOpen}
                 onClose={() => setIsDocumentModalOpen(false)}
                 onSubmit={async () => {
-                    // Logic to handle document submission for specific employee
-                    // Should pass employeeId to the data
                     toast.promise(Promise.resolve(), {
                         loading: 'Salvando documento...',
                         success: 'Documento salvo (OCR será processado em breve)',
@@ -393,8 +428,79 @@ export function EmployeeDetailsPage() {
                     });
                     setIsDocumentModalOpen(false);
                 }}
-                initialData={undefined} // Since we pass the employeeId manually below or handle in hook
+                initialData={undefined}
             />
+
+            {/* Edit Employee Modal */}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="glass w-full max-w-lg p-8 rounded-[2rem] border border-white/10 shadow-2xl relative">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-xl font-bold flex items-center gap-2">
+                                <Pencil className="w-5 h-5 text-primary" />
+                                Editar Informações
+                            </h2>
+                            <button onClick={() => setIsEditModalOpen(false)} className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleUpdateEmployee} className="space-y-6">
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Nome Completo</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={editForm.name}
+                                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">CPF</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={editForm.cpf}
+                                        onChange={(e) => setEditForm({ ...editForm, cpf: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Matrícula</label>
+                                        <input
+                                            type="text"
+                                            value={editForm.registration}
+                                            onChange={(e) => setEditForm({ ...editForm, registration: e.target.value })}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
+                                        <select
+                                            value={editForm.status}
+                                            onChange={(e) => setEditForm({ ...editForm, status: e.target.value as "ACTIVE" | "INACTIVE" })}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none"
+                                        >
+                                            <option value="ACTIVE" className="bg-black">Ativo</option>
+                                            <option value="INACTIVE" className="bg-black">Inativo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={updateEmployeeMutation.isPending}
+                                className="w-full bg-primary text-black py-4 rounded-xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-xs uppercase tracking-widest"
+                            >
+                                {updateEmployeeMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                Salvar Alterações
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

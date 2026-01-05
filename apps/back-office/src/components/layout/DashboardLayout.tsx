@@ -14,7 +14,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="flex-1 ml-64 flex flex-col">
                     <Header />
                     <main className="flex-1 p-8">
-                        <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="w-full h-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                             {children}
                         </div>
                     </main>

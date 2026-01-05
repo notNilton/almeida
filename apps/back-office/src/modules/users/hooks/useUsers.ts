@@ -2,11 +2,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
 import type { User } from "../types/user";
 
-export function useProfile() {
+export function useProfile(id?: string) {
     return useQuery<User>({
-        queryKey: ["profile"],
+        queryKey: ["profile", id],
         queryFn: async () => {
-            const response = await api.get("/users/profile");
+            const path = id ? `/users/p/${id}` : "/users/profile";
+            const response = await api.get(path);
             return response.data;
         },
     });

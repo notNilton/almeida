@@ -25,12 +25,47 @@ export class UsersService {
     }
 
     async findById(id: string) {
-        return this.prisma.user.findUnique({
-            where: { id },
-            include: {
-                avatar: true,
-            },
-        });
+        console.log(`[UsersService] findById called with id: "${id}"`);
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { id },
+                include: {
+                    avatar: true,
+                },
+            });
+
+            if (user) {
+                console.log(`[UsersService] Found user with avatar: ${user.email}`);
+                return user;
+            }
+
+            // If user is null, it might be due to broken relation or actually not found.
+            // Let's try fetching without relation to be sure.
+            const userSimple = await this.prisma.user.findUnique({
+                where: { id },
+            });
+
+            if (userSimple) {
+                console.warn(`[UsersService] User found WITHOUT avatar relation (possible broken FK): ${userSimple.email}`);
+                return { ...userSimple, avatar: null };
+            }
+
+            console.log(`[UsersService] User truly not found: ${id}`);
+            return null;
+
+        } catch (error) {
+            console.error(`[UsersService] Error fetching user ${id}:`, error);
+            // Fallback: try fetching without include
+            try {
+                const userRetry = await this.prisma.user.findUnique({ where: { id } });
+                if (userRetry) {
+                    return { ...userRetry, avatar: null };
+                }
+            } catch (innerError) {
+                console.error("Critical error fetching user:", innerError);
+            }
+            throw error;
+        }
     }
 
     async update(id: string, data: any, adminUserId?: string) {
