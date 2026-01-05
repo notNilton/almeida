@@ -190,11 +190,11 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground">ID do Funcionário (Opcional)</label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         value={formData.employeeId || ''}
-                                        onChange={(e) => setFormData({ ...formData, employeeId: e.target.value ? parseInt(e.target.value) : undefined })}
+                                        onChange={(e) => setFormData({ ...formData, employeeId: e.target.value || undefined })}
                                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                        placeholder="Ex: 5"
+                                        placeholder="Ex: ABC123XYZ"
                                     />
                                 </div>
 

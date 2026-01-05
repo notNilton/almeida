@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit/audit-log.service';
+import { nanoid } from '../common/utils/nanoid';
 
 @Injectable()
 export class ContractsService {
@@ -9,16 +10,18 @@ export class ContractsService {
         private auditLog: AuditLogService,
     ) { }
 
-    async findAllByEmployee(employeeId: number) {
+    async findAllByEmployee(employeeId: string) {
         return this.prisma.contract.findMany({
             where: { employeeId },
             orderBy: { startDate: 'desc' },
         });
     }
 
-    async create(data: any, adminUserId: number) {
+    async create(data: any, adminUserId: string) {
+        const id = nanoid();
         const contract = await this.prisma.contract.create({
             data: {
+                id,
                 employeeId: data.employeeId,
                 type: data.type,
                 startDate: new Date(data.startDate),
@@ -30,7 +33,7 @@ export class ContractsService {
         return contract;
     }
 
-    async update(id: number, data: any, adminUserId: number) {
+    async update(id: string, data: any, adminUserId: string) {
         const updateData = { ...data };
         if (data.startDate) updateData.startDate = new Date(data.startDate);
         if (data.endDate) updateData.endDate = new Date(data.endDate);
@@ -43,7 +46,7 @@ export class ContractsService {
         return contract;
     }
 
-    async remove(id: number, adminUserId: number) {
+    async remove(id: string, adminUserId: string) {
         await this.auditLog.log(adminUserId, 'DELETE', 'Contract', id);
         return this.prisma.contract.delete({ where: { id } });
     }

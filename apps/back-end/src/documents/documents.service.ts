@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit/audit-log.service';
 import { DocumentStatus } from '@prisma/client';
+import { nanoid } from '../common/utils/nanoid';
 
 @Injectable()
 export class DocumentsService {
@@ -20,7 +21,7 @@ export class DocumentsService {
         });
     }
 
-    async findByEmployee(employeeId: number) {
+    async findByEmployee(employeeId: string) {
         return this.prisma.document.findMany({
             where: { employeeId },
             include: { upload: true },
@@ -28,14 +29,16 @@ export class DocumentsService {
         });
     }
 
-    async create(data: any, adminUserId: number) {
+    async create(data: any, adminUserId: string) {
         const { uploadId, employeeId, ...rest } = data;
+        const id = nanoid();
         const document = await this.prisma.document.create({
             data: {
+                id,
                 ...rest,
                 status: data.status || DocumentStatus.PENDING,
-                upload: { connect: { id: Number(uploadId) } },
-                employee: employeeId ? { connect: { id: Number(employeeId) } } : undefined,
+                upload: { connect: { id: uploadId } },
+                employee: employeeId ? { connect: { id: employeeId } } : undefined,
             },
             include: { upload: true, employee: true },
         });
@@ -43,12 +46,12 @@ export class DocumentsService {
         return document;
     }
 
-    async update(id: number, data: any, adminUserId: number) {
+    async update(id: string, data: any, adminUserId: string) {
         const { uploadId, employeeId, ...rest } = data;
         const updateData: any = { ...rest };
 
-        if (uploadId) updateData.upload = { connect: { id: Number(uploadId) } };
-        if (employeeId) updateData.employee = { connect: { id: Number(employeeId) } };
+        if (uploadId) updateData.upload = { connect: { id: uploadId } };
+        if (employeeId) updateData.employee = { connect: { id: employeeId } };
 
         const document = await this.prisma.document.update({
             where: { id },
@@ -59,13 +62,12 @@ export class DocumentsService {
         return document;
     }
 
-    async remove(id: number, adminUserId: number) {
+    async remove(id: string, adminUserId: string) {
         await this.auditLog.log(adminUserId, 'DELETE', 'Document', id);
         return this.prisma.document.delete({ where: { id } });
     }
 
-    // Placeholder for IA OCR result processing
-    async processOcr(id: number, ocrData: any) {
+    async processOcr(id: string, ocrData: any) {
         return this.prisma.document.update({
             where: { id },
             data: {

@@ -18,7 +18,7 @@ export class EmployeesController {
     @Get(':id')
     @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
     findOne(@Param('id') id: string) {
-        return this.employeesService.findOne(+id);
+        return this.employeesService.findOne(id);
     }
 
     @Post()
@@ -30,12 +30,12 @@ export class EmployeesController {
     @Put(':id')
     @Roles(Role.ADMIN, Role.USER)
     update(@Param('id') id: string, @Body() data: any, @Req() req) {
-        return this.employeesService.update(+id, data, req.user.userId);
+        return this.employeesService.update(id, data, req.user.userId);
     }
 
     @Delete(':id')
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string, @Req() req) {
-        return this.employeesService.remove(+id, req.user.userId);
+        return this.employeesService.remove(id, req.user.userId);
     }
 }

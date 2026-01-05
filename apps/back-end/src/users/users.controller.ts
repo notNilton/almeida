@@ -30,19 +30,19 @@ export class UsersController {
     @Get(':id')
     @Roles(Role.ADMIN)
     findOne(@Param('id') id: string) {
-        return this.usersService.findById(+id);
+        return this.usersService.findById(id);
     }
 
     @Put(':id')
     @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() data: any, @Request() req) {
-        return this.usersService.update(+id, data, req.user.userId);
+        return this.usersService.update(id, data, req.user.userId);
     }
 
     @Delete(':id')
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string, @Body('deleteCode') deleteCode: string, @Request() req) {
-        return this.usersService.remove(+id, req.user.userId, deleteCode);
+        return this.usersService.remove(id, req.user.userId, deleteCode);
     }
 
     @Post()

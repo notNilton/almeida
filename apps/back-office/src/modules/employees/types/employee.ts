@@ -1,5 +1,5 @@
 export interface Employee {
-    id: number;
+    id: string; // Changed from number to string
     name: string;
     cpf: string;
     registration?: string;
@@ -11,8 +11,8 @@ export interface Employee {
 }
 
 export interface Contract {
-    id: number;
-    employeeId: number;
+    id: string; // Changed from number to string
+    employeeId: string; // Changed from number to string
     type: string;
     startDate: string;
     endDate?: string;

@@ -24,7 +24,7 @@ export function DocumentsPage() {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (confirm('Tem certeza que deseja remover este documento?')) {
             await deleteDocument.mutateAsync(id);
         }

@@ -8,7 +8,7 @@ interface ContractFormProps {
     isOpen: boolean;
     onClose: () => void;
     initialData?: Contract | null;
-    employeeId?: number;
+    employeeId?: string;
     onSuccess?: () => void;
 }
 

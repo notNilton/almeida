@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit/audit-log.service';
 import { EmployeeStatus } from '@prisma/client';
+import { nanoid } from '../common/utils/nanoid';
 
 @Injectable()
 export class EmployeesService {
@@ -20,7 +21,7 @@ export class EmployeesService {
         });
     }
 
-    async findOne(id: number) {
+    async findOne(id: string) {
         const employee = await this.prisma.employee.findUnique({
             where: { id },
             include: {
@@ -32,9 +33,11 @@ export class EmployeesService {
         return employee;
     }
 
-    async create(data: any, adminUserId: number) {
+    async create(data: any, adminUserId: string) {
+        const id = nanoid();
         const employee = await this.prisma.employee.create({
             data: {
+                id,
                 name: data.name,
                 cpf: data.cpf,
                 registration: data.registration,
@@ -45,7 +48,7 @@ export class EmployeesService {
         return employee;
     }
 
-    async update(id: number, data: any, adminUserId: number) {
+    async update(id: string, data: any, adminUserId: string) {
         const employee = await this.prisma.employee.update({
             where: { id },
             data,
@@ -54,7 +57,7 @@ export class EmployeesService {
         return employee;
     }
 
-    async remove(id: number, adminUserId: number) {
+    async remove(id: string, adminUserId: string) {
         await this.auditLog.log(adminUserId, 'DELETE', 'Employee', id);
         return this.prisma.employee.delete({ where: { id } });
     }

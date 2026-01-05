@@ -12,7 +12,7 @@ export function useEmployees() {
     });
 }
 
-export function useEmployee(id: number) {
+export function useEmployee(id: string) {
     return useQuery<Employee>({
         queryKey: ["employees", id],
         queryFn: async () => {
@@ -39,7 +39,7 @@ export function useCreateEmployee() {
 export function useUpdateEmployee() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ id, ...data }: Partial<Employee> & { id: number }) => {
+        mutationFn: async ({ id, ...data }: Partial<Employee> & { id: string }) => {
             const response = await api.put(`/employees/${id}`, data);
             return response.data;
         },
@@ -53,7 +53,7 @@ export function useUpdateEmployee() {
 export function useDeleteEmployee() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (id: number) => {
+        mutationFn: async (id: string) => {
             const response = await api.delete(`/employees/${id}`);
             return response.data;
         },

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit/audit-log.service';
+import { nanoid } from '../common/utils/nanoid';
 
 @Injectable()
 export class UsersService {
@@ -23,13 +24,16 @@ export class UsersService {
         });
     }
 
-    async findById(id: number) {
+    async findById(id: string) {
         return this.prisma.user.findUnique({
             where: { id },
+            include: {
+                avatar: true,
+            },
         });
     }
 
-    async update(id: number, data: any, adminUserId?: number) {
+    async update(id: string, data: any, adminUserId?: string) {
         const { password, ...rest } = data;
 
         const updated = await this.prisma.user.update({
@@ -44,7 +48,7 @@ export class UsersService {
         return updated;
     }
 
-    async remove(id: number, adminUserId: number, deleteCode: string) {
+    async remove(id: string, adminUserId: string, deleteCode: string) {
         const masterHash = process.env.MASTER_DELETE_CODE_HASH;
         if (!masterHash) masterHash === '$2b$10$legacyhashplaceholder'; // Fallback for dev if needed
 
@@ -60,13 +64,15 @@ export class UsersService {
         });
     }
 
-    async create(data: any, adminUserId: number) {
+    async create(data: any, adminUserId: string) {
         const { password, ...rest } = data;
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        const id = nanoid();
         const user = await this.prisma.user.create({
             data: {
                 ...rest,
+                id,
                 password: hashedPassword,
             },
         });

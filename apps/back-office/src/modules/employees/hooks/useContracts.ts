@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
 import type { Contract } from "../../employees/types/employee";
 
-export function useContracts(employeeId?: number) {
+export function useContracts(employeeId?: string) {
     return useQuery<Contract[]>({
         queryKey: employeeId ? ["contracts", "employee", employeeId] : ["contracts"],
         queryFn: async () => {
@@ -31,7 +31,7 @@ export function useCreateContract() {
 export function useUpdateContract() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ id, ...data }: Partial<Contract> & { id: number }) => {
+        mutationFn: async ({ id, ...data }: Partial<Contract> & { id: string }) => {
             const response = await api.put(`/contracts/${id}`, data);
             return response.data;
         },
@@ -45,7 +45,7 @@ export function useUpdateContract() {
 export function useDeleteContract() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (id: number) => {
+        mutationFn: async (id: string) => {
             const response = await api.delete(`/contracts/${id}`);
             return response.data;
         },

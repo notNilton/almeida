@@ -28,7 +28,7 @@ export function useCreateDocument() {
 export function useUpdateDocument() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...data }: Partial<Document> & { id: number }) => {
+    mutationFn: async ({ id, ...data }: Partial<Document> & { id: string }) => {
       const response = await api.put(`/documents/${id}`, data);
       return response.data;
     },
@@ -41,7 +41,7 @@ export function useUpdateDocument() {
 export function useDeleteDocument() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: string) => {
       await api.delete(`/documents/${id}`);
     },
     onSuccess: () => {

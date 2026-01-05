@@ -14,12 +14,12 @@ export type DocumentType =
 export type DocumentStatus = 'PENDING' | 'PROCESSED' | 'ERROR';
 
 export interface Document {
-    id: number;
+    id: string; // Changed from number to string
     name: string;
     type: DocumentType;
     status: DocumentStatus;
-    employeeId?: number;
-    uploadId?: number;
+    employeeId?: string; // Changed from number to string
+    uploadId?: string; // Changed from number to string
     upload?: Upload;
     ocrData?: any;
     createdAt: string;

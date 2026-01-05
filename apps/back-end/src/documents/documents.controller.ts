@@ -18,7 +18,7 @@ export class DocumentsController {
     @Get('employee/:employeeId')
     @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
     findByEmployee(@Param('employeeId') employeeId: string) {
-        return this.documentsService.findByEmployee(+employeeId);
+        return this.documentsService.findByEmployee(employeeId);
     }
 
     @Post()
@@ -30,18 +30,18 @@ export class DocumentsController {
     @Put(':id')
     @Roles(Role.ADMIN, Role.USER)
     update(@Param('id') id: string, @Body() data: any, @Req() req) {
-        return this.documentsService.update(+id, data, req.user.userId);
+        return this.documentsService.update(id, data, req.user.userId);
     }
 
     @Delete(':id')
     @Roles(Role.ADMIN)
     remove(@Param('id') id: string, @Req() req) {
-        return this.documentsService.remove(+id, req.user.userId);
+        return this.documentsService.remove(id, req.user.userId);
     }
 
     @Post(':id/ocr')
     @Roles(Role.ADMIN) // Assuming OCR processing is an admin/system action
     processOcr(@Param('id') id: string, @Body() body: any) {
-        return this.documentsService.processOcr(+id, body.ocrData);
+        return this.documentsService.processOcr(id, body.ocrData);
     }
 }

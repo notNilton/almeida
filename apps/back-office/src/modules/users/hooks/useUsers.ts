@@ -39,7 +39,7 @@ export function useUsers() {
 export function useUpdateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ id, ...data }: Partial<User> & { id: number }) => {
+        mutationFn: async ({ id, ...data }: Partial<User> & { id: string }) => {
             const response = await api.put(`/users/${id}`, data);
             return response.data;
         },
@@ -64,7 +64,7 @@ export function useCreateUser() {
 export function useDeleteUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ id, deleteCode }: { id: number; deleteCode: string }) => {
+        mutationFn: async ({ id, deleteCode }: { id: string; deleteCode: string }) => {
             const response = await api.delete(`/users/${id}`, { data: { deleteCode } });
             return response.data;
         },

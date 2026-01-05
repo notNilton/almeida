@@ -1,28 +1,31 @@
 import dotenv from 'dotenv';
 import path from 'path';
-
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
-
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 21);
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-import { UserRole, UserStatus } from '@prisma/client';
-
 async function main() {
   const adminPassword = await bcrypt.hash('admin123', 10);
 
-  // Create admin user
+  // --- Create Admin ---
+  // Nota: Como removemos o autoincrement, precisamos gerar o ID no create.
+  // No update, não precisamos passar o ID pois ele não muda.
   await prisma.user.upsert({
     where: { email: 'admin@almeida.com.br' },
     update: {},
     create: {
+      id: nanoid(),
       email: 'admin@almeida.com.br',
       password: adminPassword,
       name: 'Admin Almeida',
@@ -31,12 +34,14 @@ async function main() {
     },
   });
 
-  // Create extra users
+  // --- Create Users ---
   const userPassword = await bcrypt.hash('user123', 10);
+
   await prisma.user.upsert({
     where: { email: 'user@almeida.com.br' },
     update: {},
     create: {
+      id: nanoid(),
       email: 'user@almeida.com.br',
       password: userPassword,
       name: 'João Silva',
@@ -49,6 +54,7 @@ async function main() {
     where: { email: 'viewer@almeida.com.br' },
     update: {},
     create: {
+      id: nanoid(),
       email: 'viewer@almeida.com.br',
       password: userPassword,
       name: 'Maria Oliveira',
@@ -57,7 +63,7 @@ async function main() {
     },
   });
 
-  // Create Employees
+  // --- Create Employees ---
   const employees = [
     { name: 'Ricardo Almeida', cpf: '123.456.789-00', registration: 'EMP001' },
     { name: 'Ana Souza', cpf: '234.567.890-11', registration: 'EMP002' },
@@ -71,12 +77,13 @@ async function main() {
       where: { cpf: empData.cpf },
       update: {},
       create: {
+        id: nanoid(),
         ...empData,
         status: 'ACTIVE',
       },
     });
 
-    // Create a contract for each employee if not exists
+    // --- Create Contract ---
     const existingContract = await prisma.contract.findFirst({
       where: { employeeId: employee.id },
     });
@@ -84,6 +91,7 @@ async function main() {
     if (!existingContract) {
       await prisma.contract.create({
         data: {
+          id: nanoid(),
           employeeId: employee.id,
           type: 'CLT',
           startDate: new Date('2023-01-01'),
@@ -92,13 +100,15 @@ async function main() {
       });
     }
 
-    // Create an upload and a document for a couple of employees
+    // --- Create Documents & Uploads ---
     if (empData.registration === 'EMP001' || empData.registration === 'EMP002') {
-      const filename = `doc_${employee.id}.pdf`;
+      const filename = `doc_${employee.id}.pdf`; // Usando o ID do employee no nome
+
       const upload = await prisma.upload.upsert({
         where: { filename },
         update: {},
         create: {
+          id: nanoid(),
           filename,
           originalName: 'Documento_Identificacao.pdf',
           mimetype: 'application/pdf',
@@ -111,6 +121,7 @@ async function main() {
         where: { uploadId: upload.id },
         update: {},
         create: {
+          id: nanoid(),
           name: 'RG / CPF',
           type: 'OTHER',
           status: 'PROCESSED',

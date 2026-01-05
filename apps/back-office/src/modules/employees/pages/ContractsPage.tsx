@@ -44,7 +44,7 @@ export function ContractsPage() {
         try {
             await createContract.mutateAsync({
                 ...formData,
-                employeeId: parseInt(formData.employeeId),
+                employeeId: formData.employeeId,
             });
             setIsAdding(false);
             setFormData({ employeeId: "", type: "CLT", startDate: "", endDate: "", status: "ACTIVE" });
@@ -67,7 +67,7 @@ export function ContractsPage() {
 
     const filteredContracts = contracts?.filter(c =>
         c.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.employeeId.toString().includes(searchTerm)
+        c.employeeId.includes(searchTerm)
     );
 
     if (isLoading) {
@@ -107,12 +107,12 @@ export function ContractsPage() {
                                 <div className="space-y-1.5 md:col-span-2">
                                     <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">ID do Funcionário</label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         required
                                         value={formData.employeeId}
                                         onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
-                                        placeholder="Ex: 1"
+                                        placeholder="Ex: nanoid_123"
                                     />
                                 </div>
                                 <div className="space-y-1.5">

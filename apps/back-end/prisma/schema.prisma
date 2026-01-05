@@ -43,26 +43,28 @@ enum DocumentStatus {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
+  id        String     @id
   email     String     @unique
   password  String
   name      String?
   role      UserRole   @default(VIEWER)
   status    UserStatus @default(PENDING)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  avatarId  String?    @unique @map("avatar_id")
+  avatar    Upload?    @relation(fields: [avatarId], references: [id])
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Employee {
-  id           Int            @id @default(autoincrement())
+  id           String         @id
   name         String
   cpf          String         @unique
   registration String?        @unique
   status       EmployeeStatus @default(ACTIVE)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
 
   contracts Contract[]
   documents Document[]
@@ -71,57 +73,65 @@ model Employee {
 }
 
 model Contract {
-  id         Int       @id @default(autoincrement())
-  employeeId Int
+  id         String    @id
+  employeeId String    @map("employee_id")
   employee   Employee  @relation(fields: [employeeId], references: [id])
   type       String
-  startDate  DateTime
-  endDate    DateTime?
+  startDate  DateTime  @map("start_date")
+  endDate    DateTime? @map("end_date")
   status     String    @default("ACTIVE")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
 
   @@map("contracts")
 }
 
 model Document {
-  id         Int            @id @default(autoincrement())
+  id         String         @id
   name       String
   type       DocumentType   @default(OTHER)
   status     DocumentStatus @default(PENDING)
-  employeeId Int?
+  employeeId String?        @map("employee_id")
   employee   Employee?      @relation(fields: [employeeId], references: [id])
-  uploadId   Int            @unique
+  uploadId   String         @unique @map("upload_id")
   upload     Upload         @relation(fields: [uploadId], references: [id])
-  ocrData    Json?
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  ocrData    Json?          @map("ocr_data")
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
 
   @@map("documents")
 }
 
 model Upload {
-  id           Int      @id @default(autoincrement())
+  id           String   @id
   filename     String   @unique
-  originalName String
+  originalName String   @map("original_name")
   mimetype     String
   size         Int
   url          String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime @default(now()) @map("created_at")
 
   document Document?
+  user     User?
 
   @@map("uploads")
 }
 
 model AuditLog {
-  id         Int      @id @default(autoincrement())
-  userId     Int
+  id         String   @id
+  userId     String   @map("user_id")
   action     String
-  entityType String
-  entityId   Int
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id") // Alterado para String para bater com os novos IDs
   payload    String?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime @default(now()) @map("created_at")
 
   @@map("audit_logs")
+}
+
+model Setting {
+  key   String @id
+  value String
+
+  @@map("settings")
 }

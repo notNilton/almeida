@@ -1,5 +1,5 @@
 export interface Upload {
-    id: number;
+    id: string; // Changed from number to string
     filename: string;
     originalName: string;
     mimetype: string;

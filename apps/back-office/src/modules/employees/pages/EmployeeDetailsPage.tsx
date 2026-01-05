@@ -25,7 +25,7 @@ type Tab = 'resumo' | 'contratos' | 'documentos';
 
 export function EmployeeDetailsPage() {
     const { id } = useParams();
-    const employeeId = parseInt(id!);
+    const employeeId = id!;
     const { setHeader, resetHeader } = useHeader();
 
     const { data: employee, isLoading: isLoadingEmp } = useEmployee(employeeId);
@@ -61,14 +61,14 @@ export function EmployeeDetailsPage() {
 
     const employeeDocuments = documents?.filter(doc => doc.employeeId === employeeId);
 
-    const handleDeleteContract = async (cid: number) => {
+    const handleDeleteContract = async (cid: string) => {
         if (confirm("Deseja realmente excluir este contrato?")) {
             await deleteContract.mutateAsync(cid);
             toast.success("Contrato excluído com sucesso!");
         }
     };
 
-    const handleDeleteDocument = async (did: number) => {
+    const handleDeleteDocument = async (did: string) => {
         if (confirm("Deseja realmente excluir este documento?")) {
             await deleteDocument.mutateAsync(did);
             toast.success("Documento excluído com sucesso!");
