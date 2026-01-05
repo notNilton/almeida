@@ -3,7 +3,6 @@ import {
     Users,
     FileText,
     LogOut,
-    User,
     FileSignature,
     UserCircle
 } from "lucide-react";
@@ -15,7 +14,6 @@ const navigation = [
     { name: "Funcionários", href: "/funcionarios", icon: Users, roles: ['ADMIN', 'USER', 'VIEWER'] },
     { name: "Contratos", href: "/contratos", icon: FileSignature, roles: ['ADMIN', 'USER', 'VIEWER'] },
     { name: "Documentos", href: "/documentos", icon: FileText, roles: ['ADMIN', 'USER', 'VIEWER'] },
-    { name: "Perfil", href: "/perfil", icon: User, roles: ['ADMIN', 'USER', 'VIEWER'] },
     { name: "Gestão de Usuários", href: "/usuarios", icon: UserCircle, roles: ['ADMIN'] },
 ];
 

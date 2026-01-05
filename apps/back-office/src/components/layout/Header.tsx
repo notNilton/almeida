@@ -1,6 +1,6 @@
-import { Bell, User, ArrowLeft } from "lucide-react";
+import { User, ArrowLeft, Search } from "lucide-react";
 import { useHeader } from "./HeaderContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../modules/auth/contexts/AuthContext";
 import { ThemeToggle } from "./ThemeToggle";
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -39,6 +39,27 @@ export function Header() {
                 </div>
             </div>
 
+            <div className="flex-1 max-w-xl mx-8 hidden md:block">
+                {header.search ? (
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        </div>
+                        <input
+                            type="text"
+                            value={header.search.value}
+                            onChange={(e) => header.search?.onChange(e.target.value)}
+                            className="block w-full pl-10 pr-3 py-2 border border-white/10 rounded-xl leading-5 bg-white/5 text-slate-300 placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 focus:bg-white/10 sm:text-sm transition-all"
+                            placeholder={header.search.placeholder || "Buscar..."}
+                        />
+                    </div>
+                ) : header.tabs ? (
+                    <div className="flex justify-center">
+                        {header.tabs}
+                    </div>
+                ) : null}
+            </div>
+
             <div className="flex items-center gap-4">
                 {header.actions && (
                     <div className="flex items-center gap-3 mr-4 border-r border-white/10 pr-4">
@@ -46,16 +67,9 @@ export function Header() {
                     </div>
                 )}
                 <ThemeToggle />
-                <button className="p-2 rounded-full hover:bg-white/5 text-muted-foreground hover:text-white transition-colors">
-                    <Bell className="w-5 h-5" />
-                </button>
-                <Link
-                    to="/profile"
-                    className="flex items-center gap-3 pl-4 border-l border-white/10 hover:opacity-80 transition-opacity"
-                >
+                <div className="flex items-center gap-3 pl-4 border-l border-white/10">
                     <div className="text-right hidden sm:block">
                         <p className="text-xs font-bold text-white leading-tight">{user?.name || 'Usuário'}</p>
-                        <p className="text-[10px] text-muted-foreground leading-tight uppercase font-medium">{user?.role}</p>
                     </div>
                     <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-primary to-blue-500 overflow-hidden border border-white/10 flex items-center justify-center">
                         {user?.avatar?.url ? (
@@ -64,7 +78,7 @@ export function Header() {
                             <User className="w-5 h-5 text-black" />
                         )}
                     </div>
-                </Link>
+                </div>
             </div>
         </header>
     );

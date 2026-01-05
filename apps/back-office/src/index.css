@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
+  --background: 210 20% 98%; /* Softer off-white */
   --foreground: 224 71.4% 4.1%;
   --card: 0 0% 100%;
   --card-foreground: 224 71.4% 4.1%;
@@ -13,7 +13,7 @@
   --primary-foreground: 210 20% 98%;
   --secondary: 220 14.3% 95.9%;
   --secondary-foreground: 220.9 39.3% 11%;
-  --muted: 220 14.3% 95.9%;
+  --muted: 220 14.3% 93%;
   --muted-foreground: 220 8.9% 46.1%;
   --accent: 220 14.3% 95.9%;
   --accent-foreground: 220.9 39.3% 11%;
@@ -59,8 +59,15 @@
 }
 
 .glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: none;
 }

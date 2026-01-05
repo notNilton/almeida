@@ -21,6 +21,12 @@ export class UsersController {
         return this.usersService.update(req.user.userId, safeData, req.user.userId);
     }
 
+    @Get('p/:id')
+    findProfileById(@Param('id') id: string) {
+        console.log(`[UsersController] GET /users/p/:id requested with id: "${id}"`);
+        return this.usersService.findById(id);
+    }
+
     @Get()
     @Roles(Role.ADMIN)
     findAll() {
