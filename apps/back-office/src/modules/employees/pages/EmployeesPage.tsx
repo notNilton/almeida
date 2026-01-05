@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { UserPlus, User as UserIcon, Calendar, Check, X, Loader2, Trash2, Search, Eye } from "lucide-react";
+import { UserPlus, User as UserIcon, Calendar, Trash2, Search, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEmployees, useCreateEmployee, useDeleteEmployee } from "../hooks/useEmployees";
+import { useEmployees, useDeleteEmployee } from "../hooks/useEmployees";
 import { useHeader } from "../../../components/layout/HeaderContext";
 import type { Employee } from "../types/employee";
 import { toast } from "sonner";
@@ -10,18 +10,10 @@ import { cn } from "../../../lib/utils";
 export function EmployeesPage() {
     const { setHeader, resetHeader } = useHeader();
     const { data: employees, isLoading } = useEmployees();
-    const createEmployee = useCreateEmployee();
     const deleteEmployee = useDeleteEmployee();
 
-    const [isAdding, setIsAdding] = useState(false);
     const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [formData, setFormData] = useState({
-        name: "",
-        cpf: "",
-        registration: "",
-        status: "ACTIVE" as Employee["status"],
-    });
 
     useEffect(() => {
         setHeader({
@@ -32,29 +24,19 @@ export function EmployeesPage() {
                 placeholder: "Buscar por nome, CPF ou matrícula..."
             },
             actions: (
-                <button
-                    onClick={() => setIsAdding(true)}
+                <Link
+                    to="/funcionarios/novo"
                     className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded-xl font-bold hover:opacity-90 transition-all text-xs uppercase tracking-widest shadow-[0_0_20px_-5px_rgba(var(--primary-rgb),0.5)]"
                 >
                     <UserPlus className="w-4 h-4" />
                     Novo Funcionário
-                </button>
+                </Link>
             ),
         });
         return () => resetHeader();
     }, [setHeader, resetHeader, searchTerm]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await createEmployee.mutateAsync(formData);
-            setIsAdding(false);
-            setFormData({ name: "", cpf: "", registration: "", status: "ACTIVE" });
-            toast.success("Funcionário cadastrado com sucesso!");
-        } catch (error) {
-            toast.error("Erro ao cadastrar funcionário.");
-        }
-    };
+
 
     const handleDelete = async () => {
         if (!employeeToDelete) return;
@@ -88,75 +70,7 @@ export function EmployeesPage() {
 
     return (
         <div className="space-y-6 pb-12 w-full">
-            {/* Modal de Adição */}
-            {isAdding && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="glass w-full max-w-lg p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-20" />
 
-                        <div className="flex items-center justify-between mb-8">
-                            <div className="space-y-1">
-                                <h2 className="text-xl font-bold">Novo Funcionário</h2>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Preencha os dados abaixo</p>
-                            </div>
-                            <button
-                                onClick={() => setIsAdding(false)}
-                                className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            <div className="space-y-5">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em] pl-1">Nome Completo</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:bg-white/[0.05] focus:border-primary/30 transition-all font-medium placeholder:text-muted-foreground/20"
-                                        placeholder="Ex: João Silva"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em] pl-1">CPF</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            value={formData.cpf}
-                                            onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                                            className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:bg-white/[0.05] focus:border-primary/30 transition-all font-medium placeholder:text-muted-foreground/20"
-                                            placeholder="000.000.000-00"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em] pl-1">Matrícula</label>
-                                        <input
-                                            type="text"
-                                            value={formData.registration}
-                                            onChange={(e) => setFormData({ ...formData, registration: e.target.value })}
-                                            className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:bg-white/[0.05] focus:border-primary/30 transition-all font-medium placeholder:text-muted-foreground/20"
-                                            placeholder="Opcional"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={createEmployee.isPending}
-                                className="w-full bg-primary text-black py-4 rounded-xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
-                            >
-                                {createEmployee.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                                Salvar Registro
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
 
             {/* Listagem Minimalista */}
             <div className="w-full">
@@ -236,6 +150,7 @@ export function EmployeesPage() {
                     )}
                 </div>
             </div>
+
 
             {/* Modal de confirmação */}
             {employeeToDelete && (

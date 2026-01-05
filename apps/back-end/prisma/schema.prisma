@@ -75,7 +75,7 @@ model Employee {
 model Contract {
   id         String    @id
   employeeId String    @map("employee_id")
-  employee   Employee  @relation(fields: [employeeId], references: [id])
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   type       String
   startDate  DateTime  @map("start_date")
   endDate    DateTime? @map("end_date")
@@ -92,7 +92,7 @@ model Document {
   type       DocumentType   @default(OTHER)
   status     DocumentStatus @default(PENDING)
   employeeId String?        @map("employee_id")
-  employee   Employee?      @relation(fields: [employeeId], references: [id])
+  employee   Employee?      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   uploadId   String         @unique @map("upload_id")
   upload     Upload         @relation(fields: [uploadId], references: [id])
   ocrData    Json?          @map("ocr_data")
