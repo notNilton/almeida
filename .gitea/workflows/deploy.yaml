@@ -43,11 +43,19 @@ jobs:
 
       - name: Deploy to Homelab
         run: |
-          # Define environment variable for docker-compose to match the image tags
+          # 1. Exportar a variável para taggear a imagem correta
           export GITEA_REPOSITORY=${{ gitea.repository }}
 
-          # Pull the latest images
-          docker compose pull
+          # 2. Criar o arquivo .env com as secrets do Gitea
+          # O docker compose vai ler esse arquivo automaticamente
+          echo "ALMEIDA_DB_USER=${{ secrets.ALMEIDA_DB_USER }}" >> .env
+          echo "ALMEIDA_DB_PASSWORD=${{ secrets.ALMEIDA_DB_PASSWORD }}" >> .env
+          echo "ALMEIDA_DB_NAME=${{ secrets.ALMEIDA_DB_NAME }}" >> .env
+          echo "ALMEIDA_JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
 
-          # Restart containers with the new images
+          # Se tiver outras variáveis como NODE_ENV ou PORT, adicione aqui ou deixe fixo no compose
+          echo "NODE_ENV=production" >> .env
+
+          # 3. Pull e Up
+          docker compose pull
           docker compose up -d
