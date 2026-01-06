@@ -8,6 +8,10 @@ COPY . .
 # Instalar dependências (agora ele vê o apps/back-office/package.json e instala o TypeScript/Vite)
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
+# Receber variavel de ambiente do GitHub Actions/Deploy
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Buildar
 RUN pnpm -F back-office build
 

@@ -86,7 +86,7 @@ jobs:
           context: .
           file: apps/back-office/Dockerfile
           build-args: |
-            VITE_API_URL=https://almeida.nilbyte.com.br
+            VITE_API_URL=https://almeida.nilbyte.com.br/api
           push: true
           tags: |
             gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backoffice:latest
