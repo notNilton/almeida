@@ -34,7 +34,6 @@ jobs:
         run: |
           npx -y standard-version --message "chore(release): %s [skip ci]"
           git push --follow-tags origin HEAD:main
-          # Output to GITHUB_OUTPUT for next jobs
           echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Lowercase Repository Name
@@ -46,18 +45,6 @@ jobs:
     needs: setup-version
     runs-on: ubuntu-latest
     steps:
-      - name: Install Docker
-        run: |
-          apt-get update
-          apt-get install -y ca-certificates curl gnupg
-          install -m 0755 -d /etc/apt/keyrings
-          . /etc/os-release
-          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
-          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -83,18 +70,6 @@ jobs:
     needs: setup-version
     runs-on: ubuntu-latest
     steps:
-      - name: Install Docker
-        run: |
-          apt-get update
-          apt-get install -y ca-certificates curl gnupg
-          install -m 0755 -d /etc/apt/keyrings
-          . /etc/os-release
-          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
-          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -111,7 +86,7 @@ jobs:
           context: .
           file: apps/back-office/Dockerfile
           build-args: |
-            VITE_API_URL=https://api.almeida.nilbyte.com.br
+            VITE_API_URL=https://almeida.nilbyte.com.br
           push: true
           tags: |
             gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backoffice:latest
@@ -122,18 +97,6 @@ jobs:
     needs: [build-backend, build-backoffice, setup-version]
     runs-on: ubuntu-latest
     steps:
-      - name: Install Docker
-        run: |
-          apt-get update
-          apt-get install -y ca-certificates curl gnupg
-          install -m 0755 -d /etc/apt/keyrings
-          . /etc/os-release
-          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
-          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -141,10 +104,12 @@ jobs:
         run: |
           export GITEA_REPOSITORY=${{ needs.setup-version.outputs.REPO_LOWER }}
 
-          echo "DATABASE_URL=postgresql://${{ secrets.ALMEIDA_DB_USER }}:${{ secrets.ALMEIDA_DB_PASSWORD }}@tailscale:5433/${{ secrets.ALMEIDA_DB_NAME }}" >> .env
+          # MUDANÇA: Conectar direto no container do banco (rede interna)
+          echo "DATABASE_URL=postgresql://${{ secrets.ALMEIDA_DB_USER }}:${{ secrets.ALMEIDA_DB_PASSWORD }}@infra-almeida-db-1:5432/${{ secrets.ALMEIDA_DB_NAME }}" >> .env
           echo "JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
           echo "PORT=3000" >> .env
           echo "NODE_ENV=production" >> .env
 
           docker compose pull
+          # --remove-orphans garante que se mudar o nome, o velho morre
           docker compose up -d --remove-orphans
