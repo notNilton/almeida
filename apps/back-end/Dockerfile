@@ -29,12 +29,17 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Copiar package.json do backend
 COPY --from=builder /app/apps/back-end/package.json ./apps/back-end/package.json
+# Copiar schema do Prisma (necessário para o generate)
+COPY --from=builder /app/apps/back-end/prisma ./apps/back-end/prisma
 
-# Instalar dependências de produção APENAS para o backend
-# --prod: ignora devDependencies
-# --frozen-lockfile: usa o pnpm-lock.yaml
-# --filter back-end...: instala apenas para o back-end e suas dependências internas
-RUN pnpm install --prod --frozen-lockfile --filter back-end...
+# 1. Instalar TODAS as dependências (incluindo dev para ter o CLI do Prisma)
+RUN pnpm install --frozen-lockfile --filter back-end...
+
+# 2. Gerar o Prisma Client
+RUN cd apps/back-end && npx prisma generate
+
+# 3. Remover dependências de desenvolvimento (deixar só prod)
+RUN pnpm prune --prod --filter back-end...
 
 # Copiar o build (código compilado)
 COPY --from=builder /app/apps/back-end/dist ./apps/back-end/dist
