@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.13](http://gitea:3000/notNilton/almeida/compare/v0.0.12...v0.0.13) (2026-01-06)
+
+
+### Bug Fixes
+
+* Replace `pnpm prune` with `rm -rf` and `pnpm install --prod` for correct production dependency management in Dockerfile. ([4b52a1f](http://gitea:3000/notNilton/almeida/commit/4b52a1fce299f108f7ebd312ca444674fec1963e))
+
 ### [0.0.12](http://gitea:3000/notNilton/almeida/compare/v0.0.11...v0.0.12) (2026-01-06)
 
 ### [0.0.11](http://gitea:3000/notNilton/almeida/compare/v0.0.10...v0.0.11) (2026-01-06)
