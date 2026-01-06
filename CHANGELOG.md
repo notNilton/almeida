@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](http://gitea:3000/notNilton/almeida/compare/v0.0.13...v0.0.14) (2026-01-06)
+
+
+### Bug Fixes
+
+* preserve generated Prisma client during production dependency installation ([908eeae](http://gitea:3000/notNilton/almeida/commit/908eeaec38e0f1eae99f44dcaefaa171a8d64926))
+
 ### [0.0.13](http://gitea:3000/notNilton/almeida/compare/v0.0.12...v0.0.13) (2026-01-06)
 
 
