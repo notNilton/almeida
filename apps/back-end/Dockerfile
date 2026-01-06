@@ -39,9 +39,11 @@ RUN pnpm install --frozen-lockfile --filter back-end...
 RUN cd apps/back-end && npx prisma generate
 
 # 3. Remover dependências de desenvolvimento (Reinstalar apenas prod)
-# pnpm prune não suporta filter corretamente em workspaces, então limpamos e reinstalamos
-RUN rm -rf node_modules apps/back-end/node_modules && \
-    pnpm install --prod --frozen-lockfile --filter back-end...
+# Preservar o client do prisma gerado em node_modules/.prisma
+RUN cp -r node_modules/.prisma /tmp/.prisma && \
+    rm -rf node_modules apps/back-end/node_modules && \
+    pnpm install --prod --frozen-lockfile --filter back-end... && \
+    cp -r /tmp/.prisma node_modules/.prisma
 
 # Copiar o build (código compilado)
 COPY --from=builder /app/apps/back-end/dist ./apps/back-end/dist
