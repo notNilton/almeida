@@ -26,6 +26,7 @@ export function EmployeesPage() {
             actions: (
                 <Link
                     to="/funcionarios/novo"
+                    aria-label="Adicionar novo funcionário"
                     className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded-xl font-bold hover:opacity-90 transition-all text-xs uppercase tracking-widest shadow-[0_0_20px_-5px_rgba(var(--primary-rgb),0.5)]"
                 >
                     <UserPlus className="w-4 h-4" />
@@ -57,7 +58,11 @@ export function EmployeesPage() {
 
     if (isLoading) {
         return (
-            <div className="h-[60vh] flex items-center justify-center">
+            <div
+                className="h-[60vh] flex items-center justify-center"
+                role="status"
+                aria-label="Carregando funcionários..."
+            >
                 <div className="relative">
                     <div className="w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -124,6 +129,8 @@ export function EmployeesPage() {
                                 <Link
                                     to={`/funcionarios/${emp.id}`}
                                     className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                    aria-label={`Ver detalhes de ${emp.name}`}
+                                    title={`Ver detalhes de ${emp.name}`}
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Link>
@@ -133,6 +140,8 @@ export function EmployeesPage() {
                                         setEmployeeToDelete(emp);
                                     }}
                                     className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                                    aria-label={`Excluir funcionário ${emp.name}`}
+                                    title={`Excluir funcionário ${emp.name}`}
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
