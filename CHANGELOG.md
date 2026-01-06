@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](http://gitea:3000/notNilton/almeida/compare/v0.0.7...v0.0.8) (2026-01-06)
+
 ### [0.0.7](http://gitea:3000/notNilton/almeida/compare/v0.0.6...v0.0.7) (2026-01-06)
 
 
