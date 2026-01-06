@@ -35,6 +35,7 @@ jobs:
           push: true
           # AQUI MUDOU: De ${{ gitea.repository }} para ${{ env.REPO_LOWER }}
           tags: gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:latest
+          no-cache: true
 
       # Build Backoffice (Usando env.REPO_LOWER)
       - name: Build and push Backoffice image
@@ -46,6 +47,7 @@ jobs:
             VITE_API_URL=https://api.almeida.nilbyte.com.br
           push: true
           tags: gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:latest
+          no-cache: true
 
       - name: Deploy to Homelab
         run: |
