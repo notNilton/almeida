@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](http://gitea:3000/notNilton/almeida/compare/v0.0.20...v0.0.21) (2026-01-06)
+
+
+### Features
+
+* Add PORT environment variable to API service configuration ([8961031](http://gitea:3000/notNilton/almeida/commit/89610319606a7233fc2a228651056dedda270d7a))
+
 ### [0.0.20](http://gitea:3000/notNilton/almeida/compare/v0.0.19...v0.0.20) (2026-01-06)
 
 
