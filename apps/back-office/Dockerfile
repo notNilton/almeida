@@ -9,7 +9,7 @@ COPY . .
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 # Buildar
-RUN pnpm build
+RUN pnpm -F back-office build
 
 # --- Stage Final ---
 FROM nginx:alpine

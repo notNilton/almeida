@@ -49,7 +49,7 @@ jobs:
           tags: gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:latest
           no-cache: true
 
-      - name: Deploy to Homelab
+      - name: Deploy to Server
         run: |
           # 1. Exportar a variável para taggear a imagem correta (MINÚSCULA)
           # Isso é importante para o docker-compose achar a imagem que acabamos de subir
