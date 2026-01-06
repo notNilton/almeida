@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](http://gitea:3000/notNilton/almeida/compare/v0.0.1...v0.0.2) (2026-01-06)
+
+
+### Features
+
+* Add CI workflow for build and lint checks and install Docker in deploy workflow. ([fb0c53f](http://gitea:3000/notNilton/almeida/commit/fb0c53f506f9b7c8bdc87500fb6cc88dd155ac7c))
+* add react-hooks/set-state-in-effect ESLint rule ([2cfdbeb](http://gitea:3000/notNilton/almeida/commit/2cfdbebd6e854f7f17d1670a2b1a20b1cfc3e131))
+
+
+### Bug Fixes
+
+* **back-end:** resolve major typescript checking errors and ignore generated files ([8d84453](http://gitea:3000/notNilton/almeida/commit/8d84453c55073879104e5a50085ac6c4dcaff620))
+* fix linting errors ([3fc09e0](http://gitea:3000/notNilton/almeida/commit/3fc09e04dd4b20f9eeb312c663f41fcb54932170))
+* Update Docker repository from Debian to Ubuntu in Gitea workflow. ([2e483d9](http://gitea:3000/notNilton/almeida/commit/2e483d9a3f41618a624888899862448bb3e39f0d))
+
 ### 0.0.1 (2026-01-06)
 
 
