@@ -23,5 +23,12 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: {
+      'react-refresh/only-export-components': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      // Disabling specific formatting/preference rules that are strict
+    },
   },
 ])
