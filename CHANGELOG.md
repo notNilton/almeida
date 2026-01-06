@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](http://gitea:3000/notNilton/almeida/compare/v0.0.23...v0.0.24) (2026-01-06)
+
+
+### Features
+
+* Configure back-office VITE_API_URL to include /api and rename its Docker container. ([f78e53d](http://gitea:3000/notNilton/almeida/commit/f78e53da4baeea1840b8b8c70e9860ee7431d702))
+
 ### [0.0.23](http://gitea:3000/notNilton/almeida/compare/v0.0.22...v0.0.23) (2026-01-06)
 
 ### [0.0.22](http://gitea:3000/notNilton/almeida/compare/v0.0.21...v0.0.22) (2026-01-06)
