@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](http://gitea:3000/notNilton/almeida/compare/v0.0.5...v0.0.6) (2026-01-06)
+
+
+### Bug Fixes
+
+* Correct Dockerfile copy source path for NestJS build output from `dist/apps/back-end` to `apps/back-end/dist`. ([a54d082](http://gitea:3000/notNilton/almeida/commit/a54d0822f248f2b04455773c461cd48470d647de))
+
 ### [0.0.5](http://gitea:3000/notNilton/almeida/compare/v0.0.4...v0.0.5) (2026-01-06)
 
 
