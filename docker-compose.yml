@@ -5,7 +5,7 @@ services:
     image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/backend:latest
     restart: always
     ports:
-      - "3000:3000"
+      - "4201:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
@@ -14,4 +14,4 @@ services:
     image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/backoffice:latest
     restart: always
     ports:
-      - "5173:80"
+      - "4202:80"

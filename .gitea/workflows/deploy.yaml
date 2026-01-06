@@ -56,10 +56,8 @@ jobs:
           export GITEA_REPOSITORY=${{ env.REPO_LOWER }}
 
           # 2. Criar o arquivo .env com as secrets do Gitea
-          echo "ALMEIDA_DB_USER=${{ secrets.ALMEIDA_DB_USER }}" >> .env
-          echo "ALMEIDA_DB_PASSWORD=${{ secrets.ALMEIDA_DB_PASSWORD }}" >> .env
-          echo "ALMEIDA_DB_NAME=${{ secrets.ALMEIDA_DB_NAME }}" >> .env
-          echo "ALMEIDA_JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
+          echo "DATABASE_URL=postgresql://${{ secrets.ALMEIDA_DB_USER }}:${{ secrets.ALMEIDA_DB_PASSWORD }}@tailscale:5433/${{ secrets.ALMEIDA_DB_NAME }}" >> .env
+          echo "JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
 
           # Variável de produção
           echo "NODE_ENV=production" >> .env
