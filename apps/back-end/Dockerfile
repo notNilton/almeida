@@ -23,14 +23,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copiar os arquivos gerados do builder
-# Correção: O build do NestJS gera em apps/back-end/dist (não dist/apps/back-end)
-COPY --from=builder /app/apps/back-end/dist ./dist
-
-# Copiar node_modules e package.json
+# Copiar estrutura do monorepo para preservar symlinks do pnpm
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/back-end/package.json ./
+COPY --from=builder /app/package.json ./package.json
+
+# Copiar artefatos do Backend mantendo a estrutura original
+COPY --from=builder /app/apps/back-end/node_modules ./apps/back-end/node_modules
+COPY --from=builder /app/apps/back-end/package.json ./apps/back-end/package.json
+COPY --from=builder /app/apps/back-end/dist ./apps/back-end/dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main"]
+CMD ["node", "apps/back-end/dist/src/main"]
