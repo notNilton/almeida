@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](http://gitea:3000/notNilton/almeida/compare/v0.0.15...v0.0.16) (2026-01-06)
+
+
+### Bug Fixes
+
+* adjust Prisma client output paths in Dockerfile and schema.prisma ([1b5ef9f](http://gitea:3000/notNilton/almeida/commit/1b5ef9f282536c8bf2ac93a9af620d3d6687a3d4))
+
 ### [0.0.15](http://gitea:3000/notNilton/almeida/compare/v0.0.14...v0.0.15) (2026-01-06)
 
 ### [0.0.14](http://gitea:3000/notNilton/almeida/compare/v0.0.13...v0.0.14) (2026-01-06)
