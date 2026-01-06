@@ -14,22 +14,29 @@ RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm prisma:gen
 # Buildar o projeto
 RUN pnpm build
 
-# Limpar dependências de desenvolvimento
-ENV CI=true
-RUN pnpm prune --prod
-
 # --- Stage Final ---
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copiar estrutura do monorepo para preservar symlinks do pnpm
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Instalar pnpm
+RUN npm install -g pnpm
 
-# Copiar artefatos do Backend mantendo a estrutura original
-COPY --from=builder /app/apps/back-end/node_modules ./apps/back-end/node_modules
+# Copiar arquivos de configuração do workspace
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+# Copiar package.json do backend
 COPY --from=builder /app/apps/back-end/package.json ./apps/back-end/package.json
+
+# Instalar dependências de produção APENAS para o backend
+# --prod: ignora devDependencies
+# --frozen-lockfile: usa o pnpm-lock.yaml
+# --filter back-end...: instala apenas para o back-end e suas dependências internas
+RUN pnpm install --prod --frozen-lockfile --filter back-end...
+
+# Copiar o build (código compilado)
 COPY --from=builder /app/apps/back-end/dist ./apps/back-end/dist
 
 EXPOSE 3000
