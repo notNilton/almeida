@@ -100,6 +100,6 @@ jobs:
           # Variável de produção
           echo "NODE_ENV=production" >> .env
 
-          # 3. Pull e Up
+          # 3. Pull e Up (com remove-orphans para limpar containers antigos que seguram a porta)
           docker compose pull
-          docker compose up -d
+          docker compose up -d --remove-orphans
