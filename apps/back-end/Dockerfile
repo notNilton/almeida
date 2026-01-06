@@ -17,6 +17,7 @@ RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm prisma:gen
 RUN pnpm build
 
 # Limpar dependências de desenvolvimento para reduzir o tamanho da imagem final
+ENV CI=true
 RUN pnpm prune --prod
 
 # --- Stage Final ---
