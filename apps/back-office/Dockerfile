@@ -17,7 +17,7 @@ FROM nginx:alpine
 # MUDANÇA 2: Ajuste do caminho do dist no monorepo
 # O Vite geralmente gera o build em apps/back-office/dist
 COPY --from=builder /app/apps/back-office/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY apps/back-office/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
