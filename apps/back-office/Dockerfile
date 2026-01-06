@@ -12,7 +12,7 @@ RUN npm install -g pnpm && pnpm install --frozen-lockfile
 RUN pnpm -F back-office build
 
 # --- Stage Final ---
-FROM nginx:alpine
+FROM nginx:alpine-slim
 
 # MUDANÇA 2: Ajuste do caminho do dist no monorepo
 # O Vite geralmente gera o build em apps/back-office/dist
