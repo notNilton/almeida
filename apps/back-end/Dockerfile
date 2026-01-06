@@ -39,12 +39,12 @@ RUN pnpm install --frozen-lockfile --filter back-end...
 RUN cd apps/back-end && npx prisma generate
 
 # 3. Remover dependências de desenvolvimento (Reinstalar apenas prod)
-# Preservar o @prisma/client gerado explicitamente
-RUN cp -r apps/back-end/node_modules/@prisma/client /tmp/prisma-client && \
+# Preservar o .prisma/client gerado na raiz (definido no schema)
+RUN cp -r node_modules/.prisma /tmp/.prisma && \
     rm -rf node_modules apps/back-end/node_modules && \
     pnpm install --prod --frozen-lockfile --filter back-end... && \
-    mkdir -p apps/back-end/node_modules/@prisma && \
-    cp -r /tmp/prisma-client apps/back-end/node_modules/@prisma/client
+    mkdir -p node_modules/.prisma && \
+    cp -r /tmp/.prisma/client node_modules/.prisma/client
 
 # Copiar o build (código compilado)
 COPY --from=builder /app/apps/back-end/dist ./apps/back-end/dist
