@@ -54,7 +54,7 @@ export function LoginPage() {
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-primary/50 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
                             <span className="text-black font-black text-2xl tracking-tighter">AL</span>
                         </div>
-                        <h2 className="text-3xl font-black tracking-tight text-white">Bem-vindo</h2>
+                        <h2 className="text-3xl font-black tracking-tight text-white">Bem-vinda</h2>
                         <p className="text-sm text-muted-foreground font-medium">Acesse o painel administrativo</p>
                     </div>
 

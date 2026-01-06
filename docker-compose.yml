@@ -3,16 +3,27 @@ version: "3.8"
 services:
   backend:
     image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/backend:latest
+    container_name: almeida_backend_prod
     restart: always
     ports:
       - "4201:3000"
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
-      - PORT=${PORT}
+    env_file:
+      - .env
+    # ISSO É O MAIS IMPORTANTE:
+    networks:
+      - nilbyte-prod
 
   backoffice:
     image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/backoffice:latest
+    container_name: almeida_frontend_prod
     restart: always
     ports:
       - "4202:80"
+    # ISSO É O MAIS IMPORTANTE:
+    networks:
+      - nilbyte-prod
+
+# Conecta na rede que o Cloudflare e o Banco já estão
+networks:
+  nilbyte-prod:
+    external: true
