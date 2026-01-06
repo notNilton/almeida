@@ -14,10 +14,8 @@ RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm prisma:gen
 # Buildar o projeto
 RUN pnpm build
 
-# --- DEBUG DE SEGURANÇA ---
-# Se o build falhar novamente, verifique no log do Gitea o resultado deste comando
-# para saber exatamente onde o Nest colocou a pasta dist
-RUN ls -R /app/dist
+# DEBUG: Encontrar onde foi parar o main.js
+RUN find /app -name "main.js"
 
 # Limpar dependências de desenvolvimento
 ENV CI=true
@@ -28,10 +26,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# --- A CORREÇÃO PRINCIPAL ESTÁ AQUI ---
-# Em vez de copiar de /app/apps/back-end/dist (que é errado no monorepo),
-# copiamos da raiz de saida do build: /app/dist/apps/back-end
-COPY --from=builder /app/dist/apps/back-end ./dist
+# Copiar os arquivos gerados do builder
+# Correção: O build do NestJS gera em apps/back-end/dist (não dist/apps/back-end)
+COPY --from=builder /app/apps/back-end/dist ./dist
 
 # Copiar node_modules e package.json
 COPY --from=builder /app/node_modules ./node_modules
