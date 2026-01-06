@@ -29,6 +29,7 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-empty-object-type': 'off',
       // Disabling specific formatting/preference rules that are strict
+      'react-hooks/set-state-in-effect': 'warn',
     },
   },
 ])
