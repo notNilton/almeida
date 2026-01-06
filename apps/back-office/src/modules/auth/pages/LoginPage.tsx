@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../../lib/api';
-import { LogIn, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { AxiosError } from 'axios';
+import { Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
 export function LoginPage() {
     const [email, setEmail] = useState('');
@@ -23,8 +23,16 @@ export function LoginPage() {
             const response = await api.post('/auth/login', { email, password });
             login(response.data.access_token, response.data.user);
             navigate('/');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
+        } catch (err) {
+            const hasResponse = (err: unknown): err is AxiosError<{ message: string }> => {
+                return !!err && typeof err === 'object' && 'response' in err;
+            };
+
+            if (hasResponse(err)) {
+                setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
+            } else {
+                setError('Erro ao realizar login. Verifique suas credenciais.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -114,7 +122,7 @@ export function LoginPage() {
 
                     <div className="mt-8 text-center">
                         <p className="text-[10px] text-muted-foreground/40 font-mono uppercase tracking-widest">
-                            Almeida Back-office v1.0
+                            Almeida Back-office v{__APP_VERSION__}
                         </p>
                     </div>
                 </div>

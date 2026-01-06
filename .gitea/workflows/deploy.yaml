@@ -13,6 +13,23 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Continuous Integration"
+          git config --global user.email "ci@nilbyte.com.br"
+
+      - name: Version Bump
+        run: |
+          npx -y standard-version --message "chore(release): %s [skip ci]"
+          git push --follow-tags origin HEAD:main
 
       # PASSO NOVO: Converter o nome do repositório para minúsculo
       - name: Lowercase Repository Name

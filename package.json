@@ -15,9 +15,16 @@
         "prisma:studio": "pnpm -F back-end prisma studio",
         "prisma:deploy": "pnpm -F back-end prisma migrate deploy",
         "prisma:reset": "pnpm -F back-end prisma migrate reset",
-        "prisma:seed": "pnpm -F back-end prisma db seed"
+        "prisma:seed": "pnpm -F back-end prisma db seed",
+        "release": "standard-version"
     },
     "devDependencies": {
-        "turbo": "latest"
+        "turbo": "latest",
+        "standard-version": "^9.5.0"
+    },
+    "standard-version": {
+        "scripts": {
+            "postbump": "node scripts/sync-versions.js && git add apps/back-end/package.json apps/back-office/package.json"
+        }
     }
 }
