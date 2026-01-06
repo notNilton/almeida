@@ -3,7 +3,7 @@ import { AuditLogService } from './audit-log.service';
 
 @Global()
 @Module({
-    providers: [AuditLogService],
-    exports: [AuditLogService],
+  providers: [AuditLogService],
+  exports: [AuditLogService],
 })
-export class AuditLogModule { }
+export class AuditLogModule {}

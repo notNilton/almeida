@@ -59,8 +59,7 @@ export function CreateEmployeePage() {
             // Simulating OCR data fill (In a real scenario, we'd wait for OCR result)
             // if (uploadData.ocrResults) { ... }
 
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast.error("Erro ao enviar arquivo.");
         } finally {
             setIsUploading(false);
@@ -98,7 +97,7 @@ export function CreateEmployeePage() {
             await createEmployee.mutateAsync(payload);
             toast.success("Funcionário cadastrado com sucesso!");
             navigate("/funcionarios");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao cadastrar funcionário.");
         }
     };
@@ -242,7 +241,7 @@ export function CreateEmployeePage() {
                             <div className="relative">
                                 <select
                                     value={formData.status}
-                                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value as "ACTIVE" | "INACTIVE" })}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none cursor-pointer"
                                 >
                                     <option value="ACTIVE" className="bg-neutral-900">Ativo</option>

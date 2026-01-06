@@ -14,6 +14,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles, Role } from '../auth/roles.decorator';
 
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
+
 @Controller('employees')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class EmployeesController {
@@ -33,7 +36,7 @@ export class EmployeesController {
 
   @Post()
   @Roles(Role.ADMIN, Role.USER)
-  create(@Body() data: any, @Req() req: RequestWithUser) {
+  create(@Body() data: CreateEmployeeDto, @Req() req: RequestWithUser) {
     return this.employeesService.create(data, req.user.userId);
   }
 
@@ -41,7 +44,7 @@ export class EmployeesController {
   @Roles(Role.ADMIN, Role.USER)
   update(
     @Param('id') id: string,
-    @Body() data: any,
+    @Body() data: UpdateEmployeeDto,
     @Req() req: RequestWithUser,
   ) {
     return this.employeesService.update(id, data, req.user.userId);

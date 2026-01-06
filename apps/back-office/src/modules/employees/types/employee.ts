@@ -7,7 +7,16 @@ export interface Employee {
     createdAt: string;
     updatedAt: string;
     contracts?: Contract[];
-    documents?: any[];
+    documents?: Document[];
+}
+
+export interface Document {
+    id: string;
+    name: string;
+    type: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Contract {

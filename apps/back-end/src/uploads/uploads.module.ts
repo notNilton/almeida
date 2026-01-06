@@ -4,14 +4,14 @@ import { UploadsController } from './uploads.controller';
 import { DiskStorageProvider } from './providers/disk-storage.provider';
 
 @Module({
-    providers: [
-        UploadsService,
-        {
-            provide: 'STORAGE_PROVIDER',
-            useClass: DiskStorageProvider,
-        },
-    ],
-    controllers: [UploadsController],
-    exports: [UploadsService, 'STORAGE_PROVIDER'],
+  providers: [
+    UploadsService,
+    {
+      provide: 'STORAGE_PROVIDER',
+      useClass: DiskStorageProvider,
+    },
+  ],
+  controllers: [UploadsController],
+  exports: [UploadsService, 'STORAGE_PROVIDER'],
 })
-export class UploadsModule { }
+export class UploadsModule {}

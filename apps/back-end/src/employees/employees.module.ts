@@ -4,9 +4,9 @@ import { EmployeesController } from './employees.controller';
 import { AuditLogModule } from '../audit/audit-log.module';
 
 @Module({
-    imports: [AuditLogModule],
-    providers: [EmployeesService],
-    controllers: [EmployeesController],
-    exports: [EmployeesService],
+  imports: [AuditLogModule],
+  providers: [EmployeesService],
+  controllers: [EmployeesController],
+  exports: [EmployeesService],
 })
-export class EmployeesModule { }
+export class EmployeesModule {}

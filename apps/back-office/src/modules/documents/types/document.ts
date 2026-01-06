@@ -21,7 +21,7 @@ export interface Document {
     employeeId?: string; // Changed from number to string
     uploadId?: string; // Changed from number to string
     upload?: Upload;
-    ocrData?: any;
+    ocrData?: Record<string, unknown>;
     createdAt: string;
     updatedAt: string;
 }

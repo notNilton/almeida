@@ -4,9 +4,9 @@ import { ContractsController } from './contracts.controller';
 import { AuditLogModule } from '../audit/audit-log.module';
 
 @Module({
-    imports: [AuditLogModule],
-    providers: [ContractsService],
-    controllers: [ContractsController],
-    exports: [ContractsService],
+  imports: [AuditLogModule],
+  providers: [ContractsService],
+  controllers: [ContractsController],
+  exports: [ContractsService],
 })
-export class ContractsModule { }
+export class ContractsModule {}

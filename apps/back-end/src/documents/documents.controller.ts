@@ -14,6 +14,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles, Role } from '../auth/roles.decorator';
 
+import { CreateDocumentDto } from './dto/create-document.dto';
+import { UpdateDocumentDto } from './dto/update-document.dto';
+
 @Controller('documents')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DocumentsController {
@@ -33,7 +36,7 @@ export class DocumentsController {
 
   @Post()
   @Roles(Role.ADMIN, Role.USER)
-  create(@Body() data: any, @Req() req: RequestWithUser) {
+  create(@Body() data: CreateDocumentDto, @Req() req: RequestWithUser) {
     return this.documentsService.create(data, req.user.userId);
   }
 
@@ -41,7 +44,7 @@ export class DocumentsController {
   @Roles(Role.ADMIN, Role.USER)
   update(
     @Param('id') id: string,
-    @Body() data: any,
+    @Body() data: UpdateDocumentDto,
     @Req() req: RequestWithUser,
   ) {
     return this.documentsService.update(id, data, req.user.userId);
@@ -55,7 +58,10 @@ export class DocumentsController {
 
   @Post(':id/ocr')
   @Roles(Role.ADMIN)
-  processOcr(@Param('id') id: string, @Body() body: { ocrData: string }) {
+  processOcr(
+    @Param('id') id: string,
+    @Body() body: { ocrData: Record<string, any> },
+  ) {
     return this.documentsService.processOcr(id, body.ocrData);
   }
 }

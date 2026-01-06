@@ -1,0 +1,95 @@
+
+> back-office@0.0.0 lint /home/notnilton/Workspace/webdev/almeida/apps/back-office
+> eslint .
+
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/components/layout/HeaderContext.tsx
+  43:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/contexts/ThemeContext.tsx
+  36:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/auth/contexts/AuthContext.tsx
+  23:13  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/auth/contexts/AuthContext.tsx:23:13
+  21 |         const storedUser = localStorage.getItem('user');
+  22 |         if (storedUser && token) {
+> 23 |             setUser(JSON.parse(storedUser));
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  24 |         }
+  25 |         setIsLoading(false);
+  26 |     }, [token]);  react-hooks/set-state-in-effect
+  49:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-refresh/only-export-components
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/documents/components/DocumentForm.tsx
+   27:13   warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/documents/components/DocumentForm.tsx:27:13
+  25 |     useEffect(() => {
+  26 |         if (initialData) {
+> 27 |             setFormData({
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |                 name: initialData.name,
+  29 |                 type: initialData.type || 'OTHER',
+  30 |                 uploadId: initialData.uploadId,  react-hooks/set-state-in-effect
+   86:25   warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  115:25   warning  '_upload' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  205:109  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/documents/types/document.ts
+  24:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/employees/components/ContractForm.tsx
+   28:13   warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/employees/components/ContractForm.tsx:28:13
+  26 |     useEffect(() => {
+  27 |         if (initialData) {
+> 28 |             setFormData({
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  29 |                 type: initialData.type,
+  30 |                 startDate: new Date(initialData.startDate).toISOString().split('T')[0],
+  31 |                 endDate: initialData.endDate ? new Date(initialData.endDate).toISOString().split('T')[0] : "",  react-hooks/set-state-in-effect
+   90:101  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  125:103  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/employees/pages/EmployeeDetailsPage.tsx
+   57:13  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/notnilton/Workspace/webdev/almeida/apps/back-office/src/modules/employees/pages/EmployeeDetailsPage.tsx:57:13
+  55 |     useEffect(() => {
+  56 |         if (employee) {
+> 57 |             setEditForm({
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |                 name: employee.name,
+  59 |                 cpf: employee.cpf,
+  60 |                 registration: employee.registration || "",  react-hooks/set-state-in-effect
+  108:18  warning  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+
+✖ 14 problems (0 errors, 14 warnings)
+

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, FileText, Download, Trash2, Pencil, Search, Loader2 } from "lucide-react";
+import { Plus, FileText, Download, Trash2, Pencil, Search } from "lucide-react";
 import { useHeader } from "../../../components/layout/HeaderContext";
 import { cn } from "../../../lib/utils";
 import type { Document } from "../types/document";
@@ -57,7 +57,7 @@ export function DocumentsPage() {
             await deleteDocument.mutateAsync(docToDelete.id);
             setDocToDelete(null);
             toast.success("Documento excluído com sucesso!");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao excluir documento.");
         }
     };
@@ -72,7 +72,7 @@ export function DocumentsPage() {
                 toast.success("Documento criado!");
             }
             setIsModalOpen(false);
-        } catch (e) {
+        } catch {
             toast.error("Erro ao salvar documento.");
         }
     };
@@ -119,7 +119,7 @@ export function DocumentsPage() {
                                 </div>
                                 <div className="min-w-0">
                                     <div className="font-bold text-sm text-white truncate">{doc.name}</div>
-                                    <div className="text-[10px] text-muted-foreground font-mono opacity-50 uppercase tracking-widest truncate">{(doc.upload?.size / 1024 / 1024).toFixed(2)} MB • {doc.upload?.mimetype.split('/')[1]?.toUpperCase()}</div>
+                                    <div className="text-[10px] text-muted-foreground font-mono opacity-50 uppercase tracking-widest truncate">{((doc.upload?.size || 0) / 1024 / 1024).toFixed(2)} MB • {doc.upload?.mimetype.split('/')[1]?.toUpperCase()}</div>
                                 </div>
                             </div>
 
@@ -193,13 +193,15 @@ export function DocumentsPage() {
                 </div>
             </div>
 
-            <DocumentForm
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleSubmit}
-                initialData={editingDocument}
-                isLoading={createDocument.isPending || updateDocument.isPending}
-            />
+            {isModalOpen && (
+                <DocumentForm
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSubmit={handleSubmit}
+                    initialData={editingDocument}
+                    isLoading={createDocument.isPending || updateDocument.isPending}
+                />
+            )}
 
             {/* Modal de confirmação de exclusão */}
             {docToDelete && (
