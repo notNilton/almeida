@@ -8,25 +8,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  setup-version:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.version.outputs.VERSION }}
+      REPO_LOWER: ${{ steps.lower.outputs.REPO_LOWER }}
     steps:
-      - name: Install Docker
-        run: |
-          apt-get update
-          apt-get install -y ca-certificates curl gnupg
-          install -m 0755 -d /etc/apt/keyrings
-          # Determine OS ID (debian or ubuntu) dynamically
-          . /etc/os-release
-          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
-          echo \
-            "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} \
-            "$VERSION_CODENAME" stable" | \
-            tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
@@ -43,15 +30,36 @@ jobs:
           git config --global user.email "ci@nilbyte.com.br"
 
       - name: Version Bump
+        id: version
         run: |
           npx -y standard-version --message "chore(release): %s [skip ci]"
           git push --follow-tags origin HEAD:main
-          echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+          # Output to GITHUB_OUTPUT for next jobs
+          echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      # PASSO NOVO: Converter o nome do repositório para minúsculo
       - name: Lowercase Repository Name
+        id: lower
         run: |
-          echo "REPO_LOWER=$(echo '${{ gitea.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "REPO_LOWER=$(echo '${{ gitea.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+  build-backend:
+    needs: setup-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Docker
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          . /etc/os-release
+          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
+          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
       - name: Login to Gitea Registry
         uses: docker/login-action@v2
@@ -60,20 +68,43 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      # Build Backend (Usando env.REPO_LOWER)
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: apps/back-end/Dockerfile
           push: true
-          # AQUI MUDOU: De ${{ gitea.repository }} para ${{ env.REPO_LOWER }}
           tags: |
-            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:latest
-            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:${{ env.VERSION }}
+            gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backend:latest
+            gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backend:${{ needs.setup-version.outputs.VERSION }}
           no-cache: true
 
-      # Build Backoffice (Usando env.REPO_LOWER)
+  build-backoffice:
+    needs: setup-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Docker
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          . /etc/os-release
+          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
+          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Login to Gitea Registry
+        uses: docker/login-action@v2
+        with:
+          registry: gitea.nilbyte.com.br
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+
       - name: Build and push Backoffice image
         uses: docker/build-push-action@v4
         with:
@@ -83,25 +114,36 @@ jobs:
             VITE_API_URL=https://api.almeida.nilbyte.com.br
           push: true
           tags: |
-            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:latest
-            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:${{ env.VERSION }}
+            gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backoffice:latest
+            gitea.nilbyte.com.br/${{ needs.setup-version.outputs.REPO_LOWER }}/backoffice:${{ needs.setup-version.outputs.VERSION }}
           no-cache: true
+
+  deploy:
+    needs: [build-backend, build-backoffice, setup-version]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Docker
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          . /etc/os-release
+          curl -fsSL "https://download.docker.com/linux/${ID}/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
+          echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${ID} "$VERSION_CODENAME" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
       - name: Deploy to Server
         run: |
-          # 1. Exportar a variável para taggear a imagem correta (MINÚSCULA)
-          # Isso é importante para o docker-compose achar a imagem que acabamos de subir
-          # IMPORTANTE: Para o deploy, continuaremos usando a latest para simplicidade do compose
-          # mas agora temos o histórico salvo no registry!
-          export GITEA_REPOSITORY=${{ env.REPO_LOWER }}
+          export GITEA_REPOSITORY=${{ needs.setup-version.outputs.REPO_LOWER }}
 
-          # 2. Criar o arquivo .env com as secrets do Gitea
           echo "DATABASE_URL=postgresql://${{ secrets.ALMEIDA_DB_USER }}:${{ secrets.ALMEIDA_DB_PASSWORD }}@tailscale:5433/${{ secrets.ALMEIDA_DB_NAME }}" >> .env
           echo "JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
-
-          # Variável de produção
           echo "NODE_ENV=production" >> .env
 
-          # 3. Pull e Up (com remove-orphans para limpar containers antigos que seguram a porta)
           docker compose pull
           docker compose up -d --remove-orphans

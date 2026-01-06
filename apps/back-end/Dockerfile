@@ -27,11 +27,11 @@ COPY apps/back-end/prisma ./apps/back-end/prisma
 # Instalar apenas prod deps usando node-linker=hoisted para garantir node_modules "flat" e copiável (sem symlinks quebrados)
 RUN pnpm install --prod --frozen-lockfile --filter back-end... --config.node-linker=hoisted
 
-# Baixar e rodar node-prune
-RUN wget https://gobinaries.com/tj/node-prune --output-document - | /bin/sh && node-prune
-
 # Gerar Prisma Client (Outputado na raiz node_modules/.prisma/client conforme schema)
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" cd apps/back-end && npx prisma generate
+
+# Baixar e rodar node-prune APÓS o generate (para não apagar arquivos necessários para a geração)
+RUN wget https://gobinaries.com/tj/node-prune --output-document - | /bin/sh && node-prune
 
 # Remover CLI do Prisma e engines desnecessárias para economizar espaço
 RUN rm -rf apps/back-end/node_modules/prisma && \
