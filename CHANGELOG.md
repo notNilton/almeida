@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](http://gitea:3000/notNilton/almeida/compare/v0.0.9...v0.0.10) (2026-01-06)
+
+
+### Bug Fixes
+
+* Correct Dockerfile artifact copying and command for monorepo structure. ([6618d0b](http://gitea:3000/notNilton/almeida/commit/6618d0b77649ef7ea75c73b8b93a9336abd3eafb))
+
 ### [0.0.9](http://gitea:3000/notNilton/almeida/compare/v0.0.8...v0.0.9) (2026-01-06)
 
 ### [0.0.8](http://gitea:3000/notNilton/almeida/compare/v0.0.7...v0.0.8) (2026-01-06)
