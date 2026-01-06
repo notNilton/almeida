@@ -10,12 +10,6 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
 
-  frontend:
-    image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/frontend:latest
-    restart: always
-    ports:
-      - "8080:80"
-
   backoffice:
     image: gitea.nilbyte.com.br/${GITEA_REPOSITORY:-notnilton/almeida}/backoffice:latest
     restart: always
