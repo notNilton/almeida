@@ -14,9 +14,6 @@ RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm prisma:gen
 # Buildar o projeto
 RUN pnpm build
 
-# DEBUG: Encontrar onde foi parar o main.js
-RUN find /app -name "main.js"
-
 # Limpar dependências de desenvolvimento
 ENV CI=true
 RUN pnpm prune --prod
@@ -36,4 +33,4 @@ COPY --from=builder /app/apps/back-end/package.json ./
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
