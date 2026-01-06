@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](http://gitea:3000/notNilton/almeida/compare/v0.0.19...v0.0.20) (2026-01-06)
+
+
+### Features
+
+* Refactor Gitea deploy workflow into separate jobs and reorder node-prune in the backend Dockerfile. ([0f0dc7a](http://gitea:3000/notNilton/almeida/commit/0f0dc7a6584ffca69101f31f00ae5221e2e201c4))
+
 ### [0.0.19](http://gitea:3000/notNilton/almeida/compare/v0.0.18...v0.0.19) (2026-01-06)
 
 ### [0.0.18](http://gitea:3000/notNilton/almeida/compare/v0.0.17...v0.0.18) (2026-01-06)
