@@ -143,6 +143,7 @@ jobs:
 
           echo "DATABASE_URL=postgresql://${{ secrets.ALMEIDA_DB_USER }}:${{ secrets.ALMEIDA_DB_PASSWORD }}@tailscale:5433/${{ secrets.ALMEIDA_DB_NAME }}" >> .env
           echo "JWT_SECRET=${{ secrets.ALMEIDA_JWT_SECRET }}" >> .env
+          echo "PORT=3000" >> .env
           echo "NODE_ENV=production" >> .env
 
           docker compose pull
