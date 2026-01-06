@@ -59,9 +59,10 @@ export function UsersPage() {
             setUserToDelete(null);
             setDeleteCode("");
             toast.success("Usuário excluído com sucesso!");
-        } catch (error: any) {
+        } catch (error) {
             console.error("Failed to delete user:", error);
-            toast.error(error.response?.data?.message || "Erro ao excluir usuário.");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            toast.error((error as any).response?.data?.message || "Erro ao excluir usuário.");
         }
     };
 
@@ -128,7 +129,7 @@ export function UsersPage() {
                                     <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Cargo / Role</label>
                                     <select
                                         value={formData.role}
-                                        onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+                                        onChange={(e) => setFormData({ ...formData, role: e.target.value as User["role"] })}
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none"
                                     >
                                         <option value="VIEWER" className="bg-[#020617]">VIEWER (Apenas visualização)</option>

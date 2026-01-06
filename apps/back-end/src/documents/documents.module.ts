@@ -9,4 +9,4 @@ import { AuditLogModule } from '../audit/audit-log.module';
   controllers: [DocumentsController],
   exports: [DocumentsService],
 })
-export class DocumentsModule { }
+export class DocumentsModule {}

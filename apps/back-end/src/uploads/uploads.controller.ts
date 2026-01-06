@@ -1,13 +1,11 @@
 import {
-    Controller,
-    Post,
-    UseInterceptors,
-    UploadedFile,
-    ParseFilePipe,
-    MaxFileSizeValidator,
-    Req,
-    UseGuards,
-    BadRequestException,
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -18,38 +16,37 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('uploads')
 export class UploadsController {
-    constructor(private readonly uploadsService: UploadsService) { }
+  constructor(private readonly uploadsService: UploadsService) {}
 
-    @UseGuards(JwtAuthGuard)
-    @Post()
-    @UseInterceptors(
-        FileInterceptor('file', {
-            storage: diskStorage({
-                destination: './uploads',
-                filename: (req, file, callback) => {
-                    const hash = randomBytes(16).toString('hex');
-                    const extension = extname(file.originalname);
-                    callback(null, `${hash}${extension}`);
-                },
-            }),
-        }),
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const hash = randomBytes(16).toString('hex');
+          const extension = extname(file.originalname);
+          callback(null, `${hash}${extension}`);
+        },
+      }),
+    }),
+  )
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
+        ],
+      }),
     )
-    async uploadFile(
-        @UploadedFile(
-            new ParseFilePipe({
-                validators: [
-                    new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
-                ],
-            }),
-        )
-        file: Express.Multer.File,
-        @Req() req: any,
-    ) {
-        return this.uploadsService.saveUploadMetadata(
-            file.filename,
-            file.originalname,
-            file.mimetype,
-            file.size,
-        );
-    }
+    file: Express.Multer.File,
+  ) {
+    return this.uploadsService.saveUploadMetadata(
+      file.filename,
+      file.originalname,
+      file.mimetype,
+      file.size,
+    );
+  }
 }

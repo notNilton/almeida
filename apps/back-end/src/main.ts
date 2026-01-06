@@ -2,13 +2,14 @@ import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.join(__dirname, '../../../.env') });
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SanitizePipe } from './common/pipes/sanitize.pipe';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  (app as any).set('trust proxy', true);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.set('trust proxy', true);
 
   app.enableCors({
     origin: '*', // For development. In production specify domains.
@@ -32,4 +33,6 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT);
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Bootstrap error:', err);
+});

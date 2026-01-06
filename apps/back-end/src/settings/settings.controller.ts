@@ -6,22 +6,22 @@ import { Roles, Role } from '../auth/roles.decorator';
 
 @Controller('settings')
 export class SettingsController {
-    constructor(private readonly settingsService: SettingsService) { }
+  constructor(private readonly settingsService: SettingsService) {}
 
-    @Get()
-    async getSettings() {
-        return this.settingsService.getSettings();
-    }
+  @Get()
+  async getSettings() {
+    return this.settingsService.getSettings();
+  }
 
-    @Get(':key')
-    async getSetting(@Param('key') key: string) {
-        return { value: await this.settingsService.getSetting(key) };
-    }
+  @Get(':key')
+  async getSetting(@Param('key') key: string) {
+    return { value: await this.settingsService.getSetting(key) };
+  }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.ADMIN)
-    @Post()
-    async updateSetting(@Body() body: { key: string; value: string }) {
-        return this.settingsService.updateSetting(body.key, body.value);
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post()
+  async updateSetting(@Body() body: { key: string; value: string }) {
+    return this.settingsService.updateSetting(body.key, body.value);
+  }
 }

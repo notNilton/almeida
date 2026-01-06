@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, Check, Loader2 } from "lucide-react";
 import type { Contract } from "../types/employee";
 import { useCreateContract, useUpdateContract } from "../hooks/useContracts";
@@ -17,29 +17,13 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
     const updateContract = useUpdateContract();
 
     const [formData, setFormData] = useState<Partial<Contract>>({
-        type: "CLT",
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: "",
-        status: "ACTIVE",
+        type: initialData?.type || "CLT",
+        startDate: initialData?.startDate ? new Date(initialData.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        endDate: initialData?.endDate ? new Date(initialData.endDate).toISOString().split('T')[0] : "",
+        status: initialData?.status || "ACTIVE",
     });
 
-    useEffect(() => {
-        if (initialData) {
-            setFormData({
-                type: initialData.type,
-                startDate: new Date(initialData.startDate).toISOString().split('T')[0],
-                endDate: initialData.endDate ? new Date(initialData.endDate).toISOString().split('T')[0] : "",
-                status: initialData.status,
-            });
-        } else {
-            setFormData({
-                type: "CLT",
-                startDate: new Date().toISOString().split('T')[0],
-                endDate: "",
-                status: "ACTIVE",
-            });
-        }
-    }, [initialData, isOpen]);
+    // useEffect removed - relying on parent to remount component when data changes
 
     if (!isOpen) return null;
 
@@ -50,19 +34,21 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                 ...formData,
                 employeeId: employeeId || initialData?.employeeId,
                 startDate: new Date(formData.startDate!).toISOString(),
-                endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
+                endDate: formData.endDate ? new Date(formData.endDate).toISOString() : undefined,
             };
 
             if (initialData) {
-                await updateContract.mutateAsync({ id: initialData.id, ...payload } as any);
+
+                await updateContract.mutateAsync({ id: initialData.id, ...payload });
                 toast.success("Contrato atualizado com sucesso!");
             } else {
-                await createContract.mutateAsync(payload as any);
+
+                await createContract.mutateAsync(payload);
                 toast.success("Contrato criado com sucesso!");
             }
             onSuccess?.();
             onClose();
-        } catch (error) {
+        } catch {
             toast.error("Erro ao salvar contrato.");
         }
     };
@@ -85,7 +71,7 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Tipo de Contrato</label>
                             <select
                                 value={formData.type}
-                                onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                                onChange={(e) => setFormData({ ...formData, type: e.target.value as Contract['type'] })}
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
                             >
                                 <option value="CLT">CLT</option>
@@ -120,7 +106,7 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
                             <select
                                 value={formData.status}
-                                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                                onChange={(e) => setFormData({ ...formData, status: e.target.value as Contract['status'] })}
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
                             >
                                 <option value="ACTIVE">ATIVO</option>

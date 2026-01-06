@@ -1,41 +1,62 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles, Role } from '../auth/roles.decorator';
 
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
+
 @Controller('employees')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class EmployeesController {
-    constructor(private readonly employeesService: EmployeesService) { }
+  constructor(private readonly employeesService: EmployeesService) {}
 
-    @Get()
-    @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
-    findAll() {
-        return this.employeesService.findAll();
-    }
+  @Get()
+  @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
+  findAll() {
+    return this.employeesService.findAll();
+  }
 
-    @Get(':id')
-    @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
-    findOne(@Param('id') id: string) {
-        return this.employeesService.findOne(id);
-    }
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.USER, Role.VIEWER)
+  findOne(@Param('id') id: string) {
+    return this.employeesService.findOne(id);
+  }
 
-    @Post()
-    @Roles(Role.ADMIN, Role.USER)
-    create(@Body() data: any, @Req() req) {
-        return this.employeesService.create(data, req.user.userId);
-    }
+  @Post()
+  @Roles(Role.ADMIN, Role.USER)
+  create(@Body() data: CreateEmployeeDto, @Req() req: RequestWithUser) {
+    return this.employeesService.create(data, req.user.userId);
+  }
 
-    @Put(':id')
-    @Roles(Role.ADMIN, Role.USER)
-    update(@Param('id') id: string, @Body() data: any, @Req() req) {
-        return this.employeesService.update(id, data, req.user.userId);
-    }
+  @Put(':id')
+  @Roles(Role.ADMIN, Role.USER)
+  update(
+    @Param('id') id: string,
+    @Body() data: UpdateEmployeeDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.employeesService.update(id, data, req.user.userId);
+  }
 
-    @Delete(':id')
-    @Roles(Role.ADMIN)
-    remove(@Param('id') id: string, @Req() req) {
-        return this.employeesService.remove(id, req.user.userId);
-    }
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  remove(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.employeesService.remove(id, req.user.userId);
+  }
+}
+
+interface RequestWithUser {
+  user: { userId: string };
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Upload, File as FileIcon } from 'lucide-react';
 import type { Document } from '../types/document';
 import api from '../../../lib/api';
@@ -14,33 +14,15 @@ interface DocumentFormProps {
 
 export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading }: DocumentFormProps) {
     const [formData, setFormData] = useState<Omit<Document, 'id' | 'status' | 'ocrData' | 'createdAt' | 'updatedAt'>>({
-        name: '',
-        type: 'OTHER',
-        uploadId: undefined,
-        upload: undefined,
-        employeeId: undefined,
+        name: initialData?.name || '',
+        type: initialData?.type || 'OTHER',
+        uploadId: initialData?.uploadId,
+        upload: initialData?.upload,
+        employeeId: initialData?.employeeId,
     });
     const [isDragging, setIsDragging] = useState(false);
 
-    useEffect(() => {
-        if (initialData) {
-            setFormData({
-                name: initialData.name,
-                type: initialData.type || 'OTHER',
-                uploadId: initialData.uploadId,
-                upload: initialData.upload,
-                employeeId: initialData.employeeId,
-            });
-        } else {
-            setFormData({
-                name: '',
-                type: 'OTHER',
-                uploadId: undefined,
-                upload: undefined,
-                employeeId: undefined,
-            });
-        }
-    }, [initialData, isOpen]);
+    // useEffect removed - relying on parent to remount component when data changes
 
     if (!isOpen) return null;
 
@@ -83,7 +65,7 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
                 upload: uploadData,
                 name: prev.name || uploadData.originalName
             }));
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error uploading document file:', error);
             alert('Erro ao carregar arquivo.');
         }
@@ -112,12 +94,13 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { upload, ...payload } = formData;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { upload: _upload, ...payload } = formData;
         if (!payload.uploadId) {
             alert('Por favor, faça o upload de um arquivo primeiro.');
             return;
         }
-        await onSubmit(payload as any);
+        await onSubmit(payload as unknown as Omit<Document, 'id'>);
         onClose();
     };
 
@@ -202,7 +185,7 @@ export function DocumentForm({ isOpen, onClose, onSubmit, initialData, isLoading
                                     <label className="text-sm font-medium text-muted-foreground">Tipo de Documento</label>
                                     <select
                                         value={formData.type}
-                                        onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                                        onChange={(e) => setFormData({ ...formData, type: e.target.value as Document['type'] })}
                                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     >
                                         <option value="PAYSLIP">Folha de Pagamento</option>

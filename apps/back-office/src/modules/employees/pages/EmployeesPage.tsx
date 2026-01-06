@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { UserPlus, User as UserIcon, Calendar, Trash2, Search, Eye } from "lucide-react";
+import { UserPlus, User as UserIcon, Trash2, Search, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEmployees, useDeleteEmployee } from "../hooks/useEmployees";
 import { useHeader } from "../../../components/layout/HeaderContext";
@@ -44,7 +44,7 @@ export function EmployeesPage() {
             await deleteEmployee.mutateAsync(employeeToDelete.id);
             setEmployeeToDelete(null);
             toast.success("Funcionário excluído com sucesso!");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao excluir funcionário.");
         }
     };

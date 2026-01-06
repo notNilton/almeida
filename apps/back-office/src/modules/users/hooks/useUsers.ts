@@ -53,7 +53,7 @@ export function useUpdateUser() {
 export function useCreateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (data: any) => {
+        mutationFn: async (data: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'status'> & { status?: User['status']; password?: string }) => {
             const response = await api.post("/users", data);
             return response.data;
         },
