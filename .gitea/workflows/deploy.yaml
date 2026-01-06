@@ -44,6 +44,7 @@ jobs:
         run: |
           npx -y standard-version --message "chore(release): %s [skip ci]"
           git push --follow-tags origin HEAD:main
+          echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       # PASSO NOVO: Converter o nome do repositório para minúsculo
       - name: Lowercase Repository Name
@@ -65,7 +66,9 @@ jobs:
           file: apps/back-end/Dockerfile
           push: true
           # AQUI MUDOU: De ${{ gitea.repository }} para ${{ env.REPO_LOWER }}
-          tags: gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:latest
+          tags: |
+            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:latest
+            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backend:${{ env.VERSION }}
           no-cache: true
 
       # Build Backoffice (Usando env.REPO_LOWER)
@@ -77,13 +80,17 @@ jobs:
           build-args: |
             VITE_API_URL=https://api.almeida.nilbyte.com.br
           push: true
-          tags: gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:latest
+          tags: |
+            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:latest
+            gitea.nilbyte.com.br/${{ env.REPO_LOWER }}/backoffice:${{ env.VERSION }}
           no-cache: true
 
       - name: Deploy to Server
         run: |
           # 1. Exportar a variável para taggear a imagem correta (MINÚSCULA)
           # Isso é importante para o docker-compose achar a imagem que acabamos de subir
+          # IMPORTANTE: Para o deploy, continuaremos usando a latest para simplicidade do compose
+          # mas agora temos o histórico salvo no registry!
           export GITEA_REPOSITORY=${{ env.REPO_LOWER }}
 
           # 2. Criar o arquivo .env com as secrets do Gitea
