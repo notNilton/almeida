@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](http://gitea:3000/notNilton/almeida/compare/v0.0.6...v0.0.7) (2026-01-06)
+
+
+### Bug Fixes
+
+* Correct Docker entrypoint path and remove debug command. ([feb6c16](http://gitea:3000/notNilton/almeida/commit/feb6c162780ae73db64a6792054b828f9d5499dc))
+
 ### [0.0.6](http://gitea:3000/notNilton/almeida/compare/v0.0.5...v0.0.6) (2026-01-06)
 
 
