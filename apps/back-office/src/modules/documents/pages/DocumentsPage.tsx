@@ -162,6 +162,8 @@ export function DocumentsPage() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                        aria-label="Baixar documento"
+                                        title="Baixar documento"
                                     >
                                         <Download className="w-4 h-4" />
                                     </a>
@@ -169,12 +171,16 @@ export function DocumentsPage() {
                                 <button
                                     onClick={() => handleEdit(doc)}
                                     className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                    aria-label="Editar documento"
+                                    title="Editar documento"
                                 >
                                     <Pencil className="w-4 h-4" />
                                 </button>
                                 <button
                                     onClick={() => setDocToDelete(doc)}
                                     className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                                    aria-label="Excluir documento"
+                                    title="Excluir documento"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
