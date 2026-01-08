@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../../lib/api';
 import { AxiosError } from 'axios';
-import { Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -70,13 +71,15 @@ export function LoginPage() {
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
+                                <label htmlFor="email" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Mail className="w-4 h-4" />
                                     </div>
                                     <input
+                                        id="email"
                                         type="email"
+                                        autoComplete="email"
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -87,19 +90,33 @@ export function LoginPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
+                                <label htmlFor="password" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Lock className="w-4 h-4" />
                                     </div>
                                     <input
-                                        type="password"
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        autoComplete="current-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm focus:outline-none focus:bg-white/[0.05] focus:border-primary/50 transition-all font-medium placeholder:text-muted-foreground/20 text-white"
+                                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl pl-12 pr-12 py-4 text-sm focus:outline-none focus:bg-white/[0.05] focus:border-primary/50 transition-all font-medium placeholder:text-muted-foreground/20 text-white"
                                         placeholder="••••••••"
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors focus:outline-none focus-visible:text-white"
+                                        aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="w-4 h-4" />
+                                        ) : (
+                                            <Eye className="w-4 h-4" />
+                                        )}
+                                    </button>
                                 </div>
                             </div>
                         </div>
