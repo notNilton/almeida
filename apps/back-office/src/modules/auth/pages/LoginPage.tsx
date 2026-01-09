@@ -60,9 +60,9 @@ export function LoginPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-in slide-in-from-top-2">
+                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-in slide-in-from-top-2" role="alert">
                                 <div className="p-1 rounded-full bg-red-500/20 text-red-500">
-                                    <Lock className="w-3 h-3" />
+                                    <Lock className="w-3 h-3" aria-hidden="true" />
                                 </div>
                                 <p className="text-xs text-red-500 font-bold mt-0.5">{error}</p>
                             </div>
@@ -70,12 +70,13 @@ export function LoginPage() {
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
+                                <label htmlFor="email" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
-                                        <Mail className="w-4 h-4" />
+                                        <Mail className="w-4 h-4" aria-hidden="true" />
                                     </div>
                                     <input
+                                        id="email"
                                         type="email"
                                         required
                                         value={email}
@@ -87,12 +88,13 @@ export function LoginPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
+                                <label htmlFor="password" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
-                                        <Lock className="w-4 h-4" />
+                                        <Lock className="w-4 h-4" aria-hidden="true" />
                                     </div>
                                     <input
+                                        id="password"
                                         type="password"
                                         required
                                         value={password}
@@ -107,14 +109,15 @@ export function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
+                            aria-label={isLoading ? "Carregando..." : undefined}
                             className="w-full bg-primary text-black py-4 rounded-2xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-sm uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] group/btn"
                         >
                             {isLoading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                             ) : (
                                 <>
                                     Entrar
-                                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" aria-hidden="true" />
                                 </>
                             )}
                         </button>
