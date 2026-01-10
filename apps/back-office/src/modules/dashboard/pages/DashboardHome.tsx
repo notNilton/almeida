@@ -28,7 +28,8 @@ export function DashboardHome() {
             color: "text-blue-500",
             icon: Users,
             bg: "bg-blue-500/10",
-            border: "border-blue-500/20"
+            border: "border-blue-500/20",
+            link: "/funcionarios"
         },
         {
             label: "Contratos Ativos",
@@ -36,7 +37,8 @@ export function DashboardHome() {
             color: "text-purple-500",
             icon: ClipboardList,
             bg: "bg-purple-500/10",
-            border: "border-purple-500/20"
+            border: "border-purple-500/20",
+            link: "/contratos"
         },
         {
             label: "Documentos",
@@ -44,7 +46,8 @@ export function DashboardHome() {
             color: "text-emerald-500",
             icon: FileText,
             bg: "bg-emerald-500/10",
-            border: "border-emerald-500/20"
+            border: "border-emerald-500/20",
+            link: "/documentos"
         },
         {
             label: "Aguardando OCR",
@@ -52,7 +55,8 @@ export function DashboardHome() {
             color: "text-amber-500",
             icon: Clock,
             bg: "bg-amber-500/10",
-            border: "border-amber-500/20"
+            border: "border-amber-500/20",
+            link: "/documentos"
         },
     ];
 
@@ -60,24 +64,30 @@ export function DashboardHome() {
         <div className="space-y-8 pb-12 w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="glass p-6 rounded-[2rem] border border-white/5 group hover:border-white/10 transition-all relative overflow-hidden">
-                        <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity ${stat.color}`}>
-                            <stat.icon className="w-24 h-24 transform translate-x-4 -translate-y-4" />
-                        </div>
+                    <Link
+                        to={stat.link}
+                        key={stat.label}
+                        className="group relative block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-[2rem]"
+                    >
+                        <div className="glass p-6 rounded-[2rem] border border-white/5 group-hover:border-white/10 transition-all relative overflow-hidden h-full">
+                            <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity ${stat.color}`}>
+                                <stat.icon className="w-24 h-24 transform translate-x-4 -translate-y-4" />
+                            </div>
 
-                        <div className="flex items-center justify-between mb-4 relative z-10">
-                            <div className={cn("p-3 rounded-2xl border", stat.bg, stat.color, stat.border)}>
-                                <stat.icon className="w-5 h-5" />
+                            <div className="flex items-center justify-between mb-4 relative z-10">
+                                <div className={cn("p-3 rounded-2xl border", stat.bg, stat.color, stat.border)}>
+                                    <stat.icon className="w-5 h-5" />
+                                </div>
+                                <div className="p-2 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-all">
+                                    <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
+                                </div>
                             </div>
-                            <div className="p-2 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-all">
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
+                            <div className="relative z-10">
+                                <p className="text-4xl font-black text-white mb-1 tracking-tight">{stat.value}</p>
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{stat.label}</p>
                             </div>
                         </div>
-                        <div className="relative z-10">
-                            <p className="text-4xl font-black text-white mb-1 tracking-tight">{stat.value}</p>
-                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                        </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
 
