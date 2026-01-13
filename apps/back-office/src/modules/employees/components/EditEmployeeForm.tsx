@@ -44,15 +44,20 @@ export function EditEmployeeForm({ isOpen, onClose, employee }: EditEmployeeForm
                         <Pencil className="w-5 h-5 text-primary" />
                         Editar Informações
                     </h2>
-                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors">
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors"
+                        aria-label="Fechar"
+                    >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Nome Completo</label>
+                            <label htmlFor="edit-employee-name" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Nome Completo</label>
                             <input
+                                id="edit-employee-name"
                                 type="text"
                                 required
                                 value={formData.name}
@@ -61,8 +66,9 @@ export function EditEmployeeForm({ isOpen, onClose, employee }: EditEmployeeForm
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">CPF</label>
+                            <label htmlFor="edit-employee-cpf" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">CPF</label>
                             <input
+                                id="edit-employee-cpf"
                                 type="text"
                                 required
                                 value={formData.cpf}
@@ -72,8 +78,9 @@ export function EditEmployeeForm({ isOpen, onClose, employee }: EditEmployeeForm
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Matrícula</label>
+                                <label htmlFor="edit-employee-registration" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Matrícula</label>
                                 <input
+                                    id="edit-employee-registration"
                                     type="text"
                                     value={formData.registration}
                                     onChange={(e) => setFormData({ ...formData, registration: e.target.value })}
@@ -81,8 +88,9 @@ export function EditEmployeeForm({ isOpen, onClose, employee }: EditEmployeeForm
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
+                                <label htmlFor="edit-employee-status" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
                                 <select
+                                    id="edit-employee-status"
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as "ACTIVE" | "INACTIVE" })}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none"
