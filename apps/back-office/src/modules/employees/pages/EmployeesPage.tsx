@@ -124,6 +124,8 @@ export function EmployeesPage() {
                                 <Link
                                     to={`/funcionarios/${emp.id}`}
                                     className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                    aria-label="Ver detalhes do funcionário"
+                                    title="Ver detalhes"
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Link>
@@ -133,6 +135,8 @@ export function EmployeesPage() {
                                         setEmployeeToDelete(emp);
                                     }}
                                     className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                                    aria-label="Excluir funcionário"
+                                    title="Excluir"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
