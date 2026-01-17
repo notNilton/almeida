@@ -60,7 +60,11 @@ export function LoginPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-in slide-in-from-top-2">
+                            <div
+                                role="alert"
+                                aria-live="assertive"
+                                className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-in slide-in-from-top-2"
+                            >
                                 <div className="p-1 rounded-full bg-red-500/20 text-red-500">
                                     <Lock className="w-3 h-3" />
                                 </div>
@@ -70,13 +74,15 @@ export function LoginPage() {
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
+                                <label htmlFor="email" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Mail className="w-4 h-4" />
                                     </div>
                                     <input
+                                        id="email"
                                         type="email"
+                                        autoComplete="email"
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -87,13 +93,15 @@ export function LoginPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
+                                <label htmlFor="password" className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Lock className="w-4 h-4" />
                                     </div>
                                     <input
+                                        id="password"
                                         type="password"
+                                        autoComplete="current-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
