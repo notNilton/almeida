@@ -1,0 +1,3 @@
+## 2026-01-25 - Modal and List Action Accessibility
+**Learning:** In list views with repeating actions (like View/Delete), using descriptive `aria-label`s that include the item name (e.g., "Delete John Doe") is critical for screen reader users to distinguish between multiple "Delete" buttons. Also, custom modals must strictly implement `role="dialog"`, `aria-modal="true"`, and link titles/descriptions via IDs (preferably using `useId`) to ensure context is preserved when focus is trapped.
+**Action:** Always check list action buttons for `aria-label`s and ensure custom modal implementations follow WAI-ARIA dialog patterns, using `useId` for unique ID generation.
