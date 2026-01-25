@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { UserPlus, User as UserIcon, Trash2, Search, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEmployees, useDeleteEmployee } from "../hooks/useEmployees";
@@ -14,6 +14,9 @@ export function EmployeesPage() {
 
     const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+
+    const modalTitleId = useId();
+    const modalDescId = useId();
 
     useEffect(() => {
         setHeader({
@@ -124,6 +127,7 @@ export function EmployeesPage() {
                                 <Link
                                     to={`/funcionarios/${emp.id}`}
                                     className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                    aria-label={`Ver detalhes de ${emp.name}`}
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Link>
@@ -133,6 +137,7 @@ export function EmployeesPage() {
                                         setEmployeeToDelete(emp);
                                     }}
                                     className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                                    aria-label={`Excluir ${emp.name}`}
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -154,14 +159,20 @@ export function EmployeesPage() {
 
             {/* Modal de confirmação */}
             {employeeToDelete && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                <div
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={modalTitleId}
+                    aria-describedby={modalDescId}
+                >
                     <div className="glass w-full max-w-sm p-6 rounded-[2rem] border border-red-500/20 shadow-2xl space-y-6">
                         <div className="space-y-2 text-center">
                             <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
                                 <Trash2 className="w-6 h-6" />
                             </div>
-                            <h3 className="text-lg font-bold">Excluir Registro?</h3>
-                            <p className="text-xs text-muted-foreground">
+                            <h3 id={modalTitleId} className="text-lg font-bold">Excluir Registro?</h3>
+                            <p id={modalDescId} className="text-xs text-muted-foreground">
                                 Você está prestes a remover <b>{employeeToDelete.name}</b>. Esta ação é irreversível.
                             </p>
                         </div>
