@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { X, Check, Loader2 } from "lucide-react";
 import type { Contract } from "../types/employee";
 import { useCreateContract, useUpdateContract } from "../hooks/useContracts";
@@ -15,6 +15,7 @@ interface ContractFormProps {
 export function ContractForm({ isOpen, onClose, initialData, employeeId, onSuccess }: ContractFormProps) {
     const createContract = useCreateContract();
     const updateContract = useUpdateContract();
+    const formId = useId();
 
     const [formData, setFormData] = useState<Partial<Contract>>({
         type: initialData?.type || "CLT",
@@ -56,11 +57,20 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
     const isLoading = createContract.isPending || updateContract.isPending;
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${formId}-title`}
+        >
             <div className="glass w-full max-w-lg p-8 rounded-3xl border border-white/10 shadow-2xl">
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold">{initialData ? "Editar Contrato" : "Novo Contrato"}</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors">
+                    <h2 id={`${formId}-title`} className="text-2xl font-bold">{initialData ? "Editar Contrato" : "Novo Contrato"}</h2>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-white/10 rounded-full text-muted-foreground hover:text-white transition-colors"
+                        aria-label="Fechar modal"
+                    >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -68,8 +78,9 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5 md:col-span-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Tipo de Contrato</label>
+                            <label htmlFor={`${formId}-type`} className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Tipo de Contrato</label>
                             <select
+                                id={`${formId}-type`}
                                 value={formData.type}
                                 onChange={(e) => setFormData({ ...formData, type: e.target.value as Contract['type'] })}
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
@@ -82,8 +93,9 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Data de Início</label>
+                            <label htmlFor={`${formId}-startDate`} className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Data de Início</label>
                             <input
+                                id={`${formId}-startDate`}
                                 type="date"
                                 required
                                 value={formData.startDate}
@@ -93,8 +105,9 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Data de Término (Opcional)</label>
+                            <label htmlFor={`${formId}-endDate`} className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Data de Término (Opcional)</label>
                             <input
+                                id={`${formId}-endDate`}
                                 type="date"
                                 value={formData.endDate || ""}
                                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
@@ -103,8 +116,9 @@ export function ContractForm({ isOpen, onClose, initialData, employeeId, onSucce
                         </div>
 
                         <div className="space-y-1.5 md:col-span-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
+                            <label htmlFor={`${formId}-status`} className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">Status</label>
                             <select
+                                id={`${formId}-status`}
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as Contract['status'] })}
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none"
