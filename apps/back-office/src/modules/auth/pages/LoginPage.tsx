@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../../lib/api';
@@ -10,6 +10,9 @@ export function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const emailId = useId();
+    const passwordId = useId();
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -70,13 +73,15 @@ export function LoginPage() {
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
+                                <label htmlFor={emailId} className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">E-mail</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Mail className="w-4 h-4" />
                                     </div>
                                     <input
+                                        id={emailId}
                                         type="email"
+                                        autoComplete="email"
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -87,13 +92,15 @@ export function LoginPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
+                                <label htmlFor={passwordId} className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pl-1">Senha</label>
                                 <div className="relative group/input">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 text-muted-foreground group-focus-within/input:text-primary group-focus-within/input:bg-primary/10 transition-colors">
                                         <Lock className="w-4 h-4" />
                                     </div>
                                     <input
+                                        id={passwordId}
                                         type="password"
+                                        autoComplete="current-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
