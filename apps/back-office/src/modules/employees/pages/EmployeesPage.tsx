@@ -123,6 +123,8 @@ export function EmployeesPage() {
                             <div className="col-span-12 md:col-span-1 flex justify-end gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                                 <Link
                                     to={`/funcionarios/${emp.id}`}
+                                    title="Ver detalhes"
+                                    aria-label={`Ver detalhes de ${emp.name}`}
                                     className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
                                 >
                                     <Eye className="w-4 h-4" />
@@ -132,6 +134,8 @@ export function EmployeesPage() {
                                         e.stopPropagation();
                                         setEmployeeToDelete(emp);
                                     }}
+                                    title="Excluir"
+                                    aria-label={`Excluir ${emp.name}`}
                                     className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -154,14 +158,20 @@ export function EmployeesPage() {
 
             {/* Modal de confirmação */}
             {employeeToDelete && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                <div
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="delete-modal-title"
+                    aria-describedby="delete-modal-desc"
+                >
                     <div className="glass w-full max-w-sm p-6 rounded-[2rem] border border-red-500/20 shadow-2xl space-y-6">
                         <div className="space-y-2 text-center">
                             <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
                                 <Trash2 className="w-6 h-6" />
                             </div>
-                            <h3 className="text-lg font-bold">Excluir Registro?</h3>
-                            <p className="text-xs text-muted-foreground">
+                            <h3 id="delete-modal-title" className="text-lg font-bold">Excluir Registro?</h3>
+                            <p id="delete-modal-desc" className="text-xs text-muted-foreground">
                                 Você está prestes a remover <b>{employeeToDelete.name}</b>. Esta ação é irreversível.
                             </p>
                         </div>
