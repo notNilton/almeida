@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Upload, File as FileIcon, Loader2, Check, User, CreditCard, Hash } from "lucide-react";
 import { useHeader } from "../../../components/layout/HeaderContext";
@@ -11,6 +11,12 @@ export function CreateEmployeePage() {
     const { setHeader, resetHeader } = useHeader();
     const navigate = useNavigate();
     const createEmployee = useCreateEmployee();
+
+    // Form IDs for accessibility
+    const nameId = useId();
+    const cpfId = useId();
+    const registrationId = useId();
+    const statusId = useId();
 
     const [isDragging, setIsDragging] = useState(false);
     const [uploadedFile, setUploadedFile] = useState<{ id: string, name: string, size: number } | null>(null);
@@ -130,6 +136,7 @@ export function CreateEmployeePage() {
                             className="absolute inset-0 opacity-0 cursor-pointer"
                             onChange={handleFileChange}
                             accept=".pdf,image/*"
+                            aria-label="Upload de contrato"
                         />
 
                         {isUploading ? (
@@ -192,10 +199,11 @@ export function CreateEmployeePage() {
 
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Nome Completo <span className="text-red-500">*</span></label>
+                        <label htmlFor={nameId} className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Nome Completo <span className="text-red-500">*</span></label>
                         <div className="relative group">
                             <User className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input
+                                id={nameId}
                                 type="text"
                                 required
                                 value={formData.name}
@@ -207,10 +215,11 @@ export function CreateEmployeePage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">CPF <span className="text-red-500">*</span></label>
+                        <label htmlFor={cpfId} className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">CPF <span className="text-red-500">*</span></label>
                         <div className="relative group">
                             <CreditCard className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input
+                                id={cpfId}
                                 type="text"
                                 required
                                 value={formData.cpf}
@@ -223,10 +232,11 @@ export function CreateEmployeePage() {
 
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Matrícula</label>
+                            <label htmlFor={registrationId} className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Matrícula</label>
                             <div className="relative group">
                                 <Hash className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                 <input
+                                    id={registrationId}
                                     type="text"
                                     value={formData.registration}
                                     onChange={(e) => setFormData({ ...formData, registration: e.target.value })}
@@ -237,9 +247,10 @@ export function CreateEmployeePage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Status</label>
+                            <label htmlFor={statusId} className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Status</label>
                             <div className="relative">
                                 <select
+                                    id={statusId}
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as "ACTIVE" | "INACTIVE" })}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all outline-none appearance-none cursor-pointer"
